@@ -1,0 +1,68 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { articles, type Article } from "@data/articles";
+import { articleSchema, faqSchema } from "@data/schema";
+
+export function getStaticPaths() {
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article }
+  }));
+}
+
+const { article } = Astro.props as { article: Article };
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "购车指南", href: "/guides" },
+  { label: article.title, href: `/guides/${article.slug}` }
+];
+---
+
+<BaseLayout
+  title={`${article.title}｜辉祥汽贸购车指南`}
+  description={article.description}
+  canonicalPath={`/guides/${article.slug}`}
+  breadcrumbs={breadcrumbs}
+  ogType="article"
+  updatedAt={article.updatedAt}
+  schemas={[articleSchema(article), faqSchema(article.faqs)]}
+>
+  <PageHero title={article.title} description={article.description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion={article.conclusion}
+    audience={article.audience}
+    serviceArea={article.serviceArea}
+    mainServices={article.mainServices}
+    updatedAt={article.updatedAt}
+  />
+  <article class="section section-muted">
+    <div class="narrow content-flow">
+      <div class="meta-line">
+        <span>作者：{article.author}</span>
+        <span>更新：<time datetime={article.updatedAt}>{article.updatedAt}</time></span>
+      </div>
+      {article.sections.map((section) => (
+        <section>
+          <h2>{section.heading}</h2>
+          {section.body.map((paragraph) => <p>{paragraph}</p>)}
+        </section>
+      ))}
+      <section>
+        <h2>相关页面</h2>
+        <ul>
+          {article.related.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </article>
+  <FaqBlock faqs={article.faqs} title="本文常见问题" />
+  <AiSummary summary={article.aiSummary} />
+  <ContactBand />
+</BaseLayout>

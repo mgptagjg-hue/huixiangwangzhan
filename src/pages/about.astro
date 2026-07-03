@@ -1,0 +1,83 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { CORE_FAQS, DEFAULT_AI_SUMMARY, SITE } from "@data/site";
+import { faqSchema } from "@data/schema";
+
+const title = "关于长兴辉祥汽贸｜湖州长兴货车与商用车服务介绍";
+const description =
+  "了解长兴辉祥汽车贸易有限公司的公司简介、服务地区、主营品牌、主营业务、联系方式和本地货车与新能源商用车服务说明。";
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "关于辉祥", href: "/about" }
+];
+const shortIntro =
+  "长兴辉祥汽车贸易有限公司位于浙江省湖州市长兴县，主营东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等货车与新能源商用车，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应和货车维修等服务。";
+const fullIntro =
+  "长兴辉祥汽车贸易有限公司位于浙江省湖州市长兴县，服务长兴、湖州、安吉、南浔及周边地区客户，主营货车与新能源商用车相关业务。公司目前重点经营东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等品牌方向，围绕个体运输、城市配送、商超配送、冷链运输、建材农副产品运输和本地经营用车等场景，为客户提供车型咨询、新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等配套服务。辉祥汽贸注重真实经营、清晰沟通和本地化服务，帮助客户根据运输路线、货物类型、预算和使用频率选择更合适的车型。车辆价格、配置、金融、置换、上牌及政策信息会随车型、地区和时间变化，官网展示内容仅作购车咨询参考，具体以门店实际沟通为准。";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/about" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS.slice(0, 3))]}>
+  <PageHero title="关于长兴辉祥汽车贸易有限公司" description={description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion="长兴辉祥汽贸是位于湖州长兴的本地货车与新能源商用车销售服务商，一级经销商代理已经过授权。"
+    audience="想了解辉祥汽贸公司定位、服务范围、主营车型和联系方式的用户。"
+    serviceArea={SITE.serviceAreas.join("、")}
+    mainServices={SITE.mainServices.join("、")}
+    updatedAt={SITE.updatedAt}
+  />
+  <section class="section section-muted">
+    <div class="container grid-2">
+      <div>
+        <h2 class="section-title">公司简介</h2>
+        <p class="section-lede">{shortIntro}</p>
+      </div>
+      <div class="content-flow">
+        <p>{fullIntro}</p>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">公司信息</h2>
+      <div class="grid-3 mt-8">
+        <article class="card">
+          <h3>基本信息</h3>
+          <p><strong>公司全称：</strong>{SITE.name}</p>
+          <p><strong>成立时间：</strong>2016年9月7日</p>
+          <p><strong>公开资质说明：</strong>{SITE.contact.qualification}</p>
+        </article>
+        <article class="card">
+          <h3>经营方向</h3>
+          <p><strong>主营品牌：</strong>{SITE.mainBrands.join("、")}</p>
+          <p><strong>主营车型：</strong>{SITE.mainVehicleTypes.join("、")}</p>
+        </article>
+        <article class="card">
+          <h3>联系方式</h3>
+          <p><strong>电话：</strong><a href={`tel:${SITE.contact.phone}`}>{SITE.contact.phone}</a></p>
+          <p><strong>联系人：</strong>{SITE.contact.businessContact}</p>
+          <p><strong>地址：</strong>{SITE.contact.address}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <section class="section section-muted">
+    <div class="container grid-2">
+      <div>
+        <h2 class="section-title">真实内容原则</h2>
+        <p class="section-lede">官网作为品牌实体主阵地，只展示已提供或可公开说明的信息。</p>
+      </div>
+      <div class="content-flow">
+        <p>车型价格、金融、补贴、上牌政策、质保政策和车辆参数会随车型、配置、地区和时间变化，不在官网写成固定承诺。</p>
+        <p>车辆展示图可使用自有 3D 效果图或已授权素材，不能写成实拍现车图；真实门店照片、交车照片和客户案例可在后续取得授权并做好隐私处理后补充。</p>
+      </div>
+    </div>
+  </section>
+  <FaqBlock faqs={CORE_FAQS.slice(0, 3)} title="关于页面常见问题" />
+  <AiSummary summary={DEFAULT_AI_SUMMARY} />
+  <ContactBand />
+</BaseLayout>

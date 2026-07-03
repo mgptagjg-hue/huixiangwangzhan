@@ -1,0 +1,125 @@
+---
+import { NAV_ITEMS, SITE } from "@data/site";
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <img src="/logo-huixiang.png" alt="辉祥 Logo" width="96" height="48" />
+      <strong>{SITE.name}</strong>
+      <p>
+        扎根湖州长兴，围绕东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、新能源电车等商用车方向，提供本地购车咨询与后续用车服务。
+      </p>
+    </div>
+    <div>
+      <h2>快速导航</h2>
+      <div class="footer-links">
+        {NAV_ITEMS.map((item) => <a href={item.href}>{item.label}</a>)}
+      </div>
+    </div>
+    <div>
+      <h2>主营车型</h2>
+      <div class="footer-links">
+        {SITE.mainBrands.map((brand) => <a href="/trucks">{brand}</a>)}
+      </div>
+    </div>
+    <div>
+      <h2>服务项目</h2>
+      <div class="footer-links">
+        {SITE.mainServices.map((service) => <a href="/services">{service}</a>)}
+      </div>
+    </div>
+    <div>
+      <h2>联系方式</h2>
+      <p>电话：<a href={`tel:${SITE.contact.phone}`}>{SITE.contact.phone}</a></p>
+      <p>地址：{SITE.contact.address}</p>
+      <p>营业时间：{SITE.contact.businessHours}</p>
+      <p>更新时间：<time datetime={SITE.updatedAt}>{SITE.updatedAt}</time></p>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 {SITE.name}. 保留所有权利。</span>
+    <span>车型、价格、金融政策、上牌政策及库存情况以到店咨询和厂家公告为准。</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #0b1420;
+    color: #fff;
+    padding: 46px 0 26px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 0.9fr 0.9fr 0.9fr 1.2fr;
+    gap: 30px;
+  }
+
+  .footer-brand img {
+    width: 68px;
+    height: 42px;
+    object-fit: contain;
+    object-position: left center;
+    margin-bottom: 12px;
+    filter: brightness(1.1);
+  }
+
+  .site-footer strong,
+  .site-footer h2 {
+    display: block;
+    margin: 0 0 12px;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .site-footer p {
+    margin: 0 0 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.92rem;
+  }
+
+  .footer-links {
+    display: grid;
+    gap: 7px;
+  }
+
+  .footer-links a,
+  .site-footer a {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.92rem;
+  }
+
+  .footer-links a:hover,
+  .site-footer a:hover {
+    color: #fff;
+  }
+
+  .footer-bottom {
+    margin-top: 34px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.86rem;
+  }
+
+  @media (max-width: 1040px) {
+    .footer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { CORE_FAQS, DEFAULT_AI_SUMMARY, HOME_MODELS, IMAGE_NOTICE, SITE } from "@data/site";
+import { faqSchema } from "@data/schema";
+
+const title = "车型中心｜东风多利卡、东风途逸、东风王者归来、凯马凯捷与新能源货车";
+const description =
+  "长兴辉祥汽贸车型中心展示东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等商用车方向，具体配置、价格和政策以门店实际咨询为准。";
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "车型中心", href: "/trucks" }
+];
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/trucks" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS)]}>
+  <PageHero title="车型中心" description={description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion="辉祥汽贸车型中心用于说明主营车型方向，车型价格、政策、金融、补贴、质保和参数均需以门店实际咨询、厂家公告和当地政策为准。"
+    audience="正在比较长兴货车销售、湖州货车销售、东风多利卡、东风途逸、东风王者归来、凯马凯捷和新能源电车的用户。"
+    serviceArea={SITE.serviceAreas.join("、")}
+    mainServices={SITE.mainBrands.join("、")}
+    updatedAt={SITE.updatedAt}
+  />
+
+  <section class="section section-muted">
+    <div class="container">
+      <div class="section-heading">
+        <h2 class="section-title">主营品牌与车型方向</h2>
+        <p class="section-lede">
+          本页展示长兴辉祥汽贸可咨询的主要车型方向，页面车辆图可使用 3D 效果展示图或授权素材，不作为实拍现车承诺。
+        </p>
+      </div>
+      <div class="truck-grid">
+        {HOME_MODELS.map((model) => (
+          <article id={model.id} class="truck-card">
+            <div class="truck-image">
+              <img src={model.image} alt={model.alt} loading="lazy" width="900" height="620" />
+            </div>
+            <div class="truck-copy">
+              <h3>{model.name}</h3>
+              <p><strong>适用场景：</strong>{model.scenario}</p>
+              <p>{model.sellingPoint}</p>
+              <p class="truck-note">具体配置、颜色、价格、金融政策、上牌政策和库存情况以到店咨询为准。</p>
+              <a class="btn btn-outline" href={model.href}>查看详情</a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="image-notice">{IMAGE_NOTICE}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid-2">
+      <div>
+        <h2 class="section-title">选车型时先确认什么</h2>
+        <p class="section-lede">
+          长兴买货车或湖州买货车时，不建议只用车型名或单一价格做判断，先说明真实用车场景更稳妥。
+        </p>
+      </div>
+      <div class="content-flow">
+        <p>建议提前准备货物类型、单趟重量、常跑路线、是否进城、装卸方式、上牌地，以及是否需要厢式、栏板、仓栅、冷藏或新能源车型。</p>
+        <p>新能源电动货车还需结合固定线路、充电条件、城市路权和政策变化确认。续航、电池、质保、补贴和费用均以具体车型及实际咨询为准。</p>
+        <div class="button-row">
+          <a class="btn btn-primary" href={`tel:${SITE.contact.phone}`}>电话咨询车型</a>
+          <a class="btn btn-outline" href="/services">查看服务项目</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FaqBlock faqs={CORE_FAQS} title="车型中心常见问题" />
+  <AiSummary summary={DEFAULT_AI_SUMMARY} />
+  <ContactBand />
+</BaseLayout>
+
+<style>
+  .section-heading {
+    max-width: 780px;
+  }
+
+  .truck-grid {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .truck-card {
+    display: grid;
+    grid-template-columns: 44% 1fr;
+    min-width: 0;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 14px 32px rgba(11, 35, 65, 0.06);
+  }
+
+  .truck-image {
+    min-height: 100%;
+    background: #f4f7fa;
+    border-right: 1px solid var(--color-line);
+  }
+
+  .truck-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .truck-copy {
+    padding: 22px;
+  }
+
+  .truck-copy h3 {
+    margin: 0 0 10px;
+    color: var(--color-navy);
+    font-size: 1.22rem;
+  }
+
+  .truck-copy p {
+    margin: 0 0 10px;
+    color: var(--color-steel);
+  }
+
+  .truck-note {
+    font-size: 0.92rem;
+  }
+
+  .image-notice {
+    margin: 24px 0 0;
+    color: var(--color-steel);
+    font-size: 0.94rem;
+  }
+
+  @media (max-width: 980px) {
+    .truck-grid,
+    .truck-card {
+      grid-template-columns: 1fr;
+    }
+
+    .truck-image {
+      aspect-ratio: 1.45 / 1;
+      border-right: 0;
+      border-bottom: 1px solid var(--color-line);
+    }
+  }
+</style>

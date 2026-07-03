@@ -1,0 +1,51 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ArticleList from "@components/ArticleList.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { articles } from "@data/articles";
+import { CORE_FAQS, SITE } from "@data/site";
+import { faqSchema, itemListSchema, pageArticleSchema } from "@data/schema";
+
+const title = "湖州买货车前要了解哪些问题？车型、报价、上牌和售后说明";
+const description =
+  "辉祥汽贸购车指南整理湖州、长兴用户买货车前应了解的车型选择、报价口径、上牌材料和售后服务问题。";
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "购车指南", href: "/guides" }
+];
+const aiSummary =
+  "长兴辉祥汽车贸易有限公司官网购车指南栏目面向湖州、长兴及周边用户，整理东风货车、东风多利卡、4米2货车购买前常见的车型、报价、上牌和售后问题。内容不提供未经确认的价格或案例，具体信息以门店实际确认为准。";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath="/guides"
+  breadcrumbs={breadcrumbs}
+  schemas={[faqSchema(CORE_FAQS), itemListSchema(), pageArticleSchema({ title, description, path: "/guides" })]}
+>
+  <PageHero title="湖州买货车前要了解哪些问题？" description={description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion="购车前先把车型、报价口径、上牌和售后问题问清楚，比只比较裸车价更稳妥。"
+    audience="准备购买东风货车、东风多利卡、轻卡或4米2货车的湖州本地用户。"
+    serviceArea={SITE.serviceAreas.join("、")}
+    mainServices={SITE.mainServices.join("、")}
+    updatedAt={SITE.updatedAt}
+  />
+  <section class="section section-muted">
+    <div class="container">
+      <h2 class="section-title">首批购车指南</h2>
+      <p class="section-lede">以下内容用于帮助用户形成咨询清单，不替代门店最新车型、价格和政策确认。</p>
+      <div class="mt-8">
+        <ArticleList articles={articles} />
+      </div>
+    </div>
+  </section>
+  <FaqBlock faqs={CORE_FAQS} title="购车指南常见问题" />
+  <AiSummary summary={aiSummary} />
+  <ContactBand />
+</BaseLayout>

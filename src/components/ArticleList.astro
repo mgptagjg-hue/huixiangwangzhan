@@ -1,0 +1,15 @@
+---
+import type { Article } from "@data/articles";
+
+const { articles } = Astro.props as { articles: Article[] };
+---
+
+<div class="grid-3">
+  {articles.map((article) => (
+    <article class="card article-card">
+      <time datetime={article.updatedAt}>更新：{article.updatedAt}</time>
+      <h3><a href={`/guides/${article.slug}`}>{article.title}</a></h3>
+      <p>{article.description}</p>
+    </article>
+  ))}
+</div>

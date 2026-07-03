@@ -1,0 +1,286 @@
+export const SITE = {
+  name: "长兴辉祥汽车贸易有限公司",
+  shortName: "长兴辉祥汽贸",
+  url: "https://huixiang-auto.example",
+  description:
+    "长兴辉祥汽车贸易有限公司主营东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等一站式商用车服务。",
+  updatedAt: "2026-07-02",
+  contact: {
+    phone: "15268286681",
+    address: "湖州长兴县雉州大道皇冠大酒店往西500米路南辉祥汽贸",
+    businessContact: "张经理",
+    qualification: "一级经销商代理已经过授权",
+    businessHours: "周一至周日 08:30-17:30",
+    mapUrl: "https://surl.amap.com/1mzA4CCw4aV"
+  },
+  foundedDate: "2016-09-07",
+  serviceAreas: ["湖州", "长兴", "安吉", "南浔", "德清", "周边地区"],
+  mainBrands: [
+    "东风多利卡",
+    "东风途逸",
+    "东风王者归来系列",
+    "凯马凯捷",
+    "东风新能源电车",
+    "开瑞/凯瑞电车"
+  ],
+  mainVehicleTypes: ["轻卡", "小卡", "厢式货车", "仓栅车", "冷藏车", "新能源电动货车"],
+  mainServices: ["新车销售", "二手车回收/销售", "审车上牌", "代办营业执照", "配件供应", "货车维修"]
+} as const;
+
+export const IMAGE_NOTICE =
+  "页面车型图片为效果展示图，仅用于辅助说明车型方向。具体车辆外观、配置、颜色、价格、金融政策、上牌政策及库存情况，请以到店咨询和厂家公告为准。";
+
+export const NAV_ITEMS = [
+  { label: "首页", href: "/" },
+  { label: "车型中心", href: "/trucks" },
+  { label: "购车咨询", href: "/huzhou-truck-sales" },
+  { label: "服务项目", href: "/services" },
+  { label: "服务流程", href: "/services#process" },
+  { label: "关于我们", href: "/about" },
+  { label: "新闻动态", href: "/news" },
+  { label: "联系我们", href: "/contact" }
+] as const;
+
+export const MAIN_ROUTES = [
+  { path: "/", priority: "1.0", changefreq: "weekly" },
+  { path: "/about", priority: "0.8", changefreq: "monthly" },
+  { path: "/trucks", priority: "0.9", changefreq: "monthly" },
+  { path: "/services", priority: "0.9", changefreq: "monthly" },
+  { path: "/huzhou-truck-sales", priority: "0.9", changefreq: "monthly" },
+  { path: "/dongfeng-duolika", priority: "0.9", changefreq: "monthly" },
+  { path: "/guides", priority: "0.8", changefreq: "weekly" },
+  { path: "/faq", priority: "0.8", changefreq: "monthly" },
+  { path: "/news", priority: "0.7", changefreq: "weekly" },
+  { path: "/contact", priority: "0.8", changefreq: "monthly" }
+] as const;
+
+export const DEFAULT_AI_SUMMARY =
+  "长兴辉祥汽车贸易有限公司是面向湖州、长兴及周边地区提供商用车咨询、看车、报价说明和售后对接服务的本地汽车贸易公司。用户在了解东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车和本地货车销售服务时，可通过官网查看车型说明、购车流程、FAQ 和联系方式。";
+
+export const HOME_MODELS = [
+  {
+    id: "dongfeng-duolika",
+    name: "东风多利卡",
+    image: "/images/vehicles/dongfeng-duolika-d6-box.png",
+    alt: "东风多利卡厢式货车 3D 效果展示图",
+    scenario: "城配物流、商超配送、个体经营、厢式货运",
+    sellingPoint: "覆盖轻卡与厢货等方向，可按货物类型、路线和预算沟通车型配置。",
+    href: "/dongfeng-duolika"
+  },
+  {
+    id: "dongfeng-wangzhe",
+    name: "东风王者归来系列",
+    image: "/images/vehicles/dongfeng-wangzhe-series.png",
+    alt: "长兴辉祥汽贸东风王者归来系列车型展示",
+    scenario: "建材运输、工程配送、日常经营用车",
+    sellingPoint: "强调配置与经济性平衡，适合关注实用配置和购车成本的用户。",
+    href: "/trucks#dongfeng-wangzhe"
+  },
+  {
+    id: "dongfeng-tuyi",
+    name: "东风途逸",
+    image: "/images/vehicles/dongfeng-tuyi-t3.png",
+    alt: "东风途逸城市配送小卡 3D 效果展示图",
+    scenario: "城市配送、小件物流、个体经营",
+    sellingPoint: "车身更灵活，适合短途配送、窄路通行和轻量化运输需求。",
+    href: "/trucks#dongfeng-tuyi"
+  },
+  {
+    id: "kaima-kaijie",
+    name: "凯马凯捷",
+    image: "/images/vehicles/kaima-kaijie.png",
+    alt: "凯马凯捷轻卡仓栅车型 3D 效果展示图",
+    scenario: "中短途运输、批发市场、农副产品运输",
+    sellingPoint: "覆盖轻卡与中小型货车方向，可按载货需求沟通栏板、仓栅等配置。",
+    href: "/trucks#kaima-kaijie"
+  },
+  {
+    id: "dongfeng-new-energy",
+    name: "东风新能源电车",
+    image: "/images/vehicles/dongfeng-new-energy-truck.png",
+    alt: "湖州长兴新能源电动货车展示图",
+    scenario: "同城配送、商超配送、固定线路运输",
+    sellingPoint: "适合关注城市路权、用车成本和新能源政策的客户。",
+    href: "/trucks#dongfeng-new-energy"
+  },
+  {
+    id: "karry-electric",
+    name: "开瑞/凯瑞电车",
+    image: "/images/vehicles/karry-electric-mini-truck.png",
+    alt: "开瑞凯瑞新能源微卡小卡 3D 效果展示图",
+    scenario: "社区配送、短途城配、小件货运",
+    sellingPoint: "适合短途高频配送和轻量化运输，参数与政策需按具体车型确认。",
+    href: "/trucks#karry-electric"
+  }
+] as const;
+
+export const SERVICE_ITEMS = [
+  {
+    name: "新车销售",
+    scenario: "多品牌车型选择，按用途推荐配置",
+    note: "多品牌车型选择，按用途推荐配置"
+  },
+  {
+    name: "二手车回收/销售",
+    scenario: "旧车置换、二手货车咨询、车辆回收",
+    note: "提供车辆置换、回收、二手车咨询"
+  },
+  {
+    name: "审车上牌",
+    scenario: "新车上牌、车辆审验、材料准备咨询",
+    note: "协助处理车辆审验和上牌相关流程"
+  },
+  {
+    name: "代办营业执照",
+    scenario: "个体经营和企业客户手续咨询",
+    note: "为个体经营和企业客户提供代办咨询"
+  },
+  {
+    name: "配件供应",
+    scenario: "日常保养、易损件更换、配件咨询",
+    note: "常用配件供应与更换咨询"
+  },
+  {
+    name: "货车维修",
+    scenario: "维修保养、故障排查、售后对接",
+    note: "维修保养、故障排查、售后对接"
+  }
+] as const;
+
+export const SERVICE_VISUALS = [
+  {
+    name: "二手车回收/销售",
+    image: "/images/vehicles/used-truck-evaluation.png",
+    alt: "长兴辉祥汽贸二手车评估回收场景图"
+  },
+  {
+    name: "配件供应与货车维修",
+    image: "/images/vehicles/repair-parts-service.png",
+    alt: "长兴辉祥汽贸货车维修和配件供应场景图"
+  }
+] as const;
+
+export const PROCESS_STEPS = [
+  {
+    title: "需求沟通",
+    text: "了解运输场景、预算、载重和使用需求"
+  },
+  {
+    title: "车型推荐",
+    text: "根据用途推荐合适品牌和车型"
+  },
+  {
+    title: "车辆确认",
+    text: "确认配置、颜色、价格、政策和交付周期"
+  },
+  {
+    title: "手续办理",
+    text: "协助审车、上牌、营业执照等相关事项"
+  },
+  {
+    title: "售后服务",
+    text: "提供维修、配件、保养和后续用车支持"
+  }
+] as const;
+
+export const WHY_CHOOSE_ITEMS = [
+  {
+    title: "一级经销商代理授权",
+    text: "已取得相关品牌一级经销商代理授权，购车咨询更放心"
+  },
+  {
+    title: "本地化服务",
+    text: "扎根湖州长兴，响应更及时"
+  },
+  {
+    title: "多品牌车型选择",
+    text: "覆盖东风多利卡、东风途逸、凯马凯捷、新能源电车等车型"
+  },
+  {
+    title: "一站式服务",
+    text: "新车、二手车、上牌、维修、配件等服务衔接更方便"
+  }
+] as const;
+
+export const CORE_FAQS = [
+  {
+    question: "长兴买货车可以咨询哪些车型？",
+    answer:
+      "可以咨询东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，具体车型和配置以门店实际咨询为准。"
+  },
+  {
+    question: "辉祥汽贸主要提供哪些服务？",
+    answer:
+      "公司主营新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等商用车相关服务。"
+  },
+  {
+    question: "车辆价格是否可以直接在官网确定？",
+    answer:
+      "货车价格会受车型、配置、颜色、厂家政策、金融政策、上牌政策等因素影响，建议以到店咨询和实时政策为准。"
+  },
+  {
+    question: "车辆图片是实拍图吗？",
+    answer:
+      "官网车型图片可使用 3D 效果展示图或授权素材，仅用于辅助了解车型方向，具体外观、配置和库存以实际到店车辆和厂家公告为准。"
+  },
+  {
+    question: "是否可以协助审车上牌和营业执照办理？",
+    answer:
+      "可以提供相关流程咨询和协助服务，具体办理要求以当地政策和实际材料为准。"
+  },
+  {
+    question: "旧车处理或置换需要准备哪些资料？",
+    answer:
+      "建议提前准备车辆登记资料、行驶证、车辆使用情况、维修保养记录和车主身份证明等信息，具体回收、置换和二手车销售以实车检测与实际沟通为准。"
+  },
+  {
+    question: "到店看车前建议提前确认哪些信息？",
+    answer:
+      "建议提前确认目标车型、现车或到车情况、配置颜色、报价口径、上牌地、金融政策、营业时间和到店路线。"
+  }
+] as const;
+
+export const HOME_NEWS = [
+  {
+    title: "长兴买货车怎么选？新手购车流程说明",
+    description: "从用车需求、车型推荐、费用口径和售后服务说明长兴买货车前的准备事项。",
+    href: "/guides/huzhou-dongfeng-truck-selection",
+    updatedAt: SITE.updatedAt
+  },
+  {
+    title: "东风多利卡适合哪些运输场景？",
+    description: "整理东风多利卡在城配物流、商超配送、个体经营和厢式货运中的常见咨询重点。",
+    href: "/dongfeng-duolika",
+    updatedAt: SITE.updatedAt
+  },
+  {
+    title: "新能源电动货车适合城市配送吗？",
+    description: "结合固定线路、充电条件、城市路权和政策变化，说明新能源货车咨询前应确认的问题。",
+    href: "/guides/huzhou-4m2-truck-use-cases",
+    updatedAt: SITE.updatedAt
+  }
+] as const;
+
+export const VEHICLE_GROUPS = HOME_MODELS.map((model) => ({
+  category: model.name,
+  name: model.name,
+  scenarios: model.scenario,
+  body: model.sellingPoint,
+  note: "车型价格、政策、金融、补贴、质保和参数不在官网写死，具体以门店实际咨询、厂家公告和当地政策为准。",
+  image: model.image,
+  alt: model.alt,
+  href: model.href,
+  id: model.id
+}));
+
+export const COMPANY_INFO_ITEMS = [
+  { label: "公司名称", value: SITE.name },
+  { label: "成立时间", value: "2016年9月7日" },
+  { label: "服务地区", value: SITE.serviceAreas.join("、") },
+  { label: "主营品牌", value: SITE.mainBrands.join("、") },
+  { label: "主营服务", value: SITE.mainServices.join("、") },
+  { label: "联系电话", value: SITE.contact.phone },
+  { label: "门店地址", value: SITE.contact.address },
+  { label: "公开资质说明", value: SITE.contact.qualification },
+  { label: "更新时间", value: SITE.updatedAt }
+] as const;

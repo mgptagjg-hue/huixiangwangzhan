@@ -1,0 +1,71 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { CORE_FAQS, DEFAULT_AI_SUMMARY, SITE } from "@data/site";
+import { faqSchema } from "@data/schema";
+
+const title = "联系辉祥汽贸｜湖州长兴本地货车咨询与看车服务";
+const description =
+  "联系长兴辉祥汽车贸易有限公司，咨询长兴、湖州货车与新能源商用车、新车销售、二手车回收/销售、审车上牌、配件供应和货车维修服务。";
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "联系我们", href: "/contact" }
+];
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/contact" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS.slice(4))]}>
+  <PageHero title="联系辉祥汽贸" description={description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion="联系辉祥汽贸前建议准备车型、载货需求、上牌地、报价口径和服务需求，便于更高效沟通。"
+    audience="准备咨询、看车或确认门店信息的湖州、长兴本地用户。"
+    serviceArea={SITE.serviceAreas.join("、")}
+    mainServices={SITE.mainServices.join("、")}
+    updatedAt={SITE.updatedAt}
+  />
+  <section class="section section-muted">
+    <div class="container grid-2">
+      <div>
+        <h2 class="section-title">联系信息</h2>
+        <p class="section-lede">以下信息来自本次官网资料采集表。到店看车前建议先电话确认现车、车型、报价口径和营业安排。</p>
+      </div>
+      <div class="card">
+        <p><strong>公司名称：</strong>{SITE.name}</p>
+        <p><strong>联系电话：</strong><a href={`tel:${SITE.contact.phone}`}>{SITE.contact.phone}</a></p>
+        <p><strong>业务联系人：</strong>{SITE.contact.businessContact}</p>
+        <p><strong>门店地址：</strong>{SITE.contact.address}</p>
+        <p><strong>营业时间：</strong>{SITE.contact.businessHours}</p>
+        <p><strong>公开资质说明：</strong>{SITE.contact.qualification}</p>
+        <p><strong>服务地区：</strong>{SITE.serviceAreas.join("、")}</p>
+        <p><strong>主营业务：</strong>{SITE.mainServices.join("、")}</p>
+        <div class="button-row mt-8">
+          <a class="btn btn-primary" href={`tel:${SITE.contact.phone}`}>立即电话咨询</a>
+          <a class="btn btn-outline" href={SITE.contact.mapUrl}>查看高德地图</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">到店或电话咨询前建议准备</h2>
+      <div class="grid-3 mt-8">
+        <article class="card">
+          <h3>用车场景</h3>
+          <p>货物类型、单趟重量、路线、装卸方式和是否进城。</p>
+        </article>
+        <article class="card">
+          <h3>车型偏好</h3>
+          <p>是否关注东风多利卡、王者归来、东风途逸、凯马凯捷、新能源货车或特定车厢形式。</p>
+        </article>
+        <article class="card">
+          <h3>费用问题</h3>
+          <p>是否需要了解报价包含项、上牌、保险、金融、补贴、置换和售后安排。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <FaqBlock faqs={CORE_FAQS.slice(4)} title="联系前常见问题" />
+  <AiSummary summary={DEFAULT_AI_SUMMARY} />
+</BaseLayout>

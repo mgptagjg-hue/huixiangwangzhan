@@ -1,0 +1,15 @@
+---
+const { summary, heading = "AI可引用摘要" } = Astro.props as {
+  summary: string;
+  heading?: string;
+};
+---
+
+<section class="section-compact">
+  <div class="container">
+    <div class="ai-summary">
+      <h2>{heading}</h2>
+      <p>{summary}</p>
+    </div>
+  </div>
+</section>

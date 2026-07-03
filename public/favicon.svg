@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="辉祥汽贸">
+  <rect width="64" height="64" rx="8" fill="#0b2341"/>
+  <path d="M16 38h25.5c3.1 0 5.8-2 6.8-4.9l1.7-5.1H35.4l-4.2-7H20.4l-3.7 10.8H13v6.2h3z" fill="#ffffff"/>
+  <circle cx="23" cy="43" r="5" fill="#c83224"/>
+  <circle cx="45" cy="43" r="5" fill="#c83224"/>
+  <path d="M20 18h14" stroke="#f47b20" stroke-width="4" stroke-linecap="round"/>
+</svg>

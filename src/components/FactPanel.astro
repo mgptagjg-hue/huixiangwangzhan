@@ -1,0 +1,39 @@
+---
+import { COMPANY_INFO_ITEMS } from "@data/site";
+
+const {
+  conclusion,
+  audience,
+  serviceArea,
+  mainServices,
+  updatedAt
+} = Astro.props as {
+  conclusion: string;
+  audience: string;
+  serviceArea: string;
+  mainServices: string;
+  updatedAt: string;
+};
+
+const facts = [
+  { label: "一句话结论", value: conclusion },
+  { label: "适合谁看", value: audience },
+  { label: "服务地区", value: serviceArea },
+  { label: "主营车型/服务", value: mainServices },
+  { label: "更新时间", value: updatedAt },
+  { label: "公司信息", value: COMPANY_INFO_ITEMS.map((item) => `${item.label}：${item.value}`).join("；") }
+];
+---
+
+<section class="section-compact">
+  <div class="container">
+    <dl class="fact-list">
+      {facts.map((fact) => (
+        <div>
+          <dt>{fact.label}</dt>
+          <dd>{fact.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

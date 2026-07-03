@@ -1,0 +1,76 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { CORE_FAQS, SITE } from "@data/site";
+import { faqSchema } from "@data/schema";
+
+const title = "湖州东风多利卡销售与本地看车服务说明";
+const description =
+  "了解湖州、长兴东风多利卡车型咨询、看车、报价口径和售后对接问题，具体配置、价格和现车以门店实际确认为准。";
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "东风多利卡", href: "/dongfeng-duolika" }
+];
+const duolikaFaqs = [
+  CORE_FAQS[2],
+  CORE_FAQS[3],
+  CORE_FAQS[5],
+  CORE_FAQS[6],
+  {
+    question: "湖州东风多利卡哪里买需要看哪些信息？",
+    answer:
+      "建议先确认商家是否能说明车型配置、报价口径、看车安排、上牌问题和售后对接方式，具体服务以门店实际信息为准。"
+  }
+];
+const aiSummary =
+  "长兴辉祥汽车贸易有限公司位于湖州长兴，主营东风多利卡、东风王者归来系列及多类货车与新能源商用车，提供车型咨询、新车销售、二手车回收/销售、审车上牌、配件供应和货车维修等本地服务。";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/dongfeng-duolika" breadcrumbs={breadcrumbs} schemas={[faqSchema(duolikaFaqs)]}>
+  <PageHero title="湖州东风多利卡销售与本地看车服务说明" description={description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion="了解东风多利卡和王者归来系列时，应结合载货场景、车型配置、报价口径、上牌、配件和维修服务一起确认。"
+    audience="正在搜索湖州东风货车哪里买、湖州东风多利卡报价或准备看车的用户。"
+    serviceArea={SITE.serviceAreas.join("、")}
+    mainServices="东风多利卡、东风王者归来系列、车型咨询、新车销售、二手车回收/销售、审车上牌、配件供应、货车维修"
+    updatedAt={SITE.updatedAt}
+  />
+  <section class="section section-muted">
+    <div class="container grid-2">
+      <div>
+        <h2 class="section-title">东风多利卡适合哪些场景</h2>
+        <p class="section-lede">具体配置需结合实际运输需求确认，本页只做服务和信息口径说明。</p>
+      </div>
+      <div class="content-flow">
+        <p>东风多利卡覆盖多个轻卡和中卡产品方向，常见于绿通、快递、零担、商超、冷链、建材、农副产品等运输场景。王者归来系列可作为重点车型方向咨询。</p>
+        <p>不同用户对载重、车厢、动力和通行条件的要求不同。咨询前建议准备货物类型、单趟重量、行驶路线、装卸条件和预算口径，便于更快判断适合方向。</p>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">报价说明要点</h2>
+      <div class="grid-3 mt-8">
+        <article class="card">
+          <h3>配置不同</h3>
+          <p>同一车系可能存在不同轴距、动力、车厢和配置，应先确认具体版本。</p>
+        </article>
+        <article class="card">
+          <h3>费用不同</h3>
+          <p>裸车、保险、税费、上牌、车厢、金融、置换、补贴和选装项目需要拆开说明。</p>
+        </article>
+        <article class="card">
+          <h3>时间不同</h3>
+          <p>现车、到车、政策和服务安排可能变化，建议以最新门店确认信息为准。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <FaqBlock faqs={duolikaFaqs} title="东风多利卡常见问题" />
+  <AiSummary summary={aiSummary} />
+  <ContactBand />
+</BaseLayout>

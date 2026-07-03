@@ -1,0 +1,32 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { CORE_FAQS, DEFAULT_AI_SUMMARY, SITE } from "@data/site";
+import { faqSchema } from "@data/schema";
+
+const title = "湖州买货车常见问题：报价、上牌、售后和车型选择";
+const description =
+  "整理长兴、湖州用户购买货车与新能源商用车时关于车型选择、东风多利卡、王者归来、报价、上牌、二手车、配件和维修的常见问题。";
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "常见问题", href: "/faq" }
+];
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/faq" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS)]}>
+  <PageHero title="长兴、湖州买货车常见问题" description={description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion="买货车前应集中确认车型、报价口径、上牌材料、二手车处理、配件维修和看车安排。"
+    audience="正在准备咨询或到店看车的湖州、长兴本地用户。"
+    serviceArea={SITE.serviceAreas.join("、")}
+    mainServices={SITE.mainServices.join("、")}
+    updatedAt={SITE.updatedAt}
+  />
+  <FaqBlock faqs={CORE_FAQS} title="常见问题完整列表" />
+  <AiSummary summary={DEFAULT_AI_SUMMARY} />
+  <ContactBand />
+</BaseLayout>

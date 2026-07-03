@@ -1,0 +1,77 @@
+---
+import { SITE } from "@data/site";
+---
+
+<section class="contact-band">
+  <div class="container contact-band-inner">
+    <div>
+      <p class="eyeless-label">联系我们</p>
+      <h2 class="section-title">联系辉祥汽贸</h2>
+      <p class="section-lede">
+        购车咨询、服务预约、到店看车，欢迎先电话沟通车型、配置、现车或到车情况。
+      </p>
+    </div>
+    <div class="contact-info-grid" aria-label="联系信息">
+      <p><strong>公司名称：</strong>{SITE.name}</p>
+      <p><strong>公司地址：</strong>{SITE.contact.address}</p>
+      <p><strong>联系电话：</strong><a href={`tel:${SITE.contact.phone}`}>{SITE.contact.phone}</a></p>
+      <p><strong>营业时间：</strong>{SITE.contact.businessHours}</p>
+      <p><strong>主营业务：</strong>{SITE.mainServices.join("、")}</p>
+      <p><strong>服务地区：</strong>{SITE.serviceAreas.join("、")}</p>
+    </div>
+    <div class="button-row">
+      <a class="btn btn-primary" href={`tel:${SITE.contact.phone}`}>购车咨询</a>
+      <a class="btn btn-secondary" href={SITE.contact.mapUrl}>查看地图</a>
+      <a class="btn btn-secondary" href="/contact">查看联系方式</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-band {
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, rgba(7, 27, 51, 0.98), rgba(7, 27, 51, 0.82)),
+      url("/images/vehicles/hero-3d-truck.png") right center / cover no-repeat;
+    color: #fff;
+    padding: 62px 0;
+  }
+
+  .contact-band-inner {
+    display: grid;
+    gap: 24px;
+  }
+
+  .contact-band .section-title,
+  .contact-band .section-lede,
+  .contact-band .eyeless-label {
+    color: #fff;
+  }
+
+  .contact-band .section-lede {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .contact-info-grid {
+    width: min(780px, 100%);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 24px;
+  }
+
+  .contact-info-grid p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .contact-info-grid strong {
+    color: #fff;
+  }
+
+  @media (max-width: 720px) {
+    .contact-info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

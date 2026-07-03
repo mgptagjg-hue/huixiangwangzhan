@@ -1,0 +1,78 @@
+---
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+import { SITE } from "@data/site";
+import {
+  autoDealerSchema,
+  breadcrumbSchema,
+  organizationSchema,
+  siteNavigationSchema,
+  websiteSchema
+} from "@data/schema";
+import "../styles/global.css";
+
+type Crumb = { label: string; href: string };
+
+const {
+  title,
+  description,
+  canonicalPath,
+  breadcrumbs = [],
+  schemas = [],
+  ogType = "website",
+  updatedAt = SITE.updatedAt
+} = Astro.props as {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  breadcrumbs?: Crumb[];
+  schemas?: Record<string, unknown>[];
+  ogType?: "website" | "article";
+  updatedAt?: string;
+};
+
+const canonicalUrl = new URL(canonicalPath, SITE.url).toString();
+const allSchemas = [
+  organizationSchema(),
+  autoDealerSchema(),
+  websiteSchema(),
+  siteNavigationSchema(),
+  ...(breadcrumbs.length ? [breadcrumbSchema(breadcrumbs)] : []),
+  ...schemas
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={`${SITE.name}官网`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL("/images/vehicles/hero-3d-truck.png", SITE.url).toString()} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="last-modified" content={updatedAt} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {allSchemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+  </head>
+  <body>
+    <div class="site-shell">
+      <Header />
+      <main id="main" class="site-main">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

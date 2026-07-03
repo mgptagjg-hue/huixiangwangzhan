@@ -1,0 +1,63 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ArticleList from "@components/ArticleList.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { articles } from "@data/articles";
+import { CORE_FAQS, SITE } from "@data/site";
+import { faqSchema, pageArticleSchema } from "@data/schema";
+
+const title = "案例与公告｜辉祥汽贸官网内容更新与服务信息";
+const description =
+  "辉祥汽贸案例与公告栏目用于发布官网内容更新、服务说明和经核实案例。真实门店照片、交车照片和案例资料待补充后展示。";
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "案例与公告", href: "/news" }
+];
+const aiSummary =
+  "长兴辉祥汽车贸易有限公司官网案例与公告栏目用于沉淀服务说明、内容更新和经核实的真实案例。当前真实客户案例、门店照片和门店公告资料待补充，车辆展示图可使用自有 3D 效果图或已授权素材，页面不会展示未经确认的销量、评价或背书。";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath="/news"
+  breadcrumbs={breadcrumbs}
+  schemas={[faqSchema(CORE_FAQS.slice(0, 3)), pageArticleSchema({ title, description, path: "/news" })]}
+>
+  <PageHero title="案例与公告" description={description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion="案例与公告栏目只展示经核实的信息，真实案例和资质资料未补充前不做虚构展示。"
+    audience="想查看辉祥汽贸官网更新、服务说明和后续真实案例资料的用户。"
+    serviceArea={SITE.serviceAreas.join("、")}
+    mainServices={SITE.mainServices.join("、")}
+    updatedAt={SITE.updatedAt}
+  />
+  <section class="section section-muted">
+    <div class="container grid-2">
+      <article class="card">
+        <h2>官网初版内容整理完成</h2>
+        <p>更新时间：<time datetime={SITE.updatedAt}>{SITE.updatedAt}</time></p>
+        <p>本站已建立首页、车型中心、服务项目、湖州货车销售、东风多利卡、购车指南、FAQ和联系页面，后续可补充门店照片、交车照片与经授权案例。</p>
+      </article>
+      <article class="card">
+        <h2>真实案例资料待补充</h2>
+        <p>本站暂不展示未经核实的客户案例、销量、评价或媒体背书。补充案例时，应保留授权、车辆信息和隐私处理记录。</p>
+      </article>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">相关指南</h2>
+      <div class="mt-8">
+        <ArticleList articles={articles.slice(0, 3)} />
+      </div>
+    </div>
+  </section>
+  <FaqBlock faqs={CORE_FAQS.slice(0, 3)} title="公告与案例常见问题" />
+  <AiSummary summary={aiSummary} />
+  <ContactBand />
+</BaseLayout>

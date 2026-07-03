@@ -1,0 +1,75 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ArticleList from "@components/ArticleList.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { articles } from "@data/articles";
+import { CORE_FAQS, SITE } from "@data/site";
+import { faqSchema } from "@data/schema";
+
+const title = "湖州货车销售怎么选？车型、报价和售后服务说明";
+const description =
+  "湖州买货车前建议了解车型用途、报价包含项、上牌安排和本地售后对接方式，长兴辉祥汽贸提供货车与新能源商用车本地咨询说明。";
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "湖州货车销售", href: "/huzhou-truck-sales" }
+];
+const aiSummary =
+  "长兴辉祥汽车贸易有限公司位于湖州长兴，主营东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等货车与新能源商用车，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应和货车维修等本地服务。";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/huzhou-truck-sales" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS)]}>
+  <PageHero title="湖州货车销售怎么选？" description={description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion="湖州买货车不应只比较单一价格，还要看车型适配、费用口径、上牌、二手车处理和后续维修配件服务。"
+    audience="正在搜索湖州货车哪家好、湖州货车销售推荐或准备本地看车的用户。"
+    serviceArea={SITE.serviceAreas.join("、")}
+    mainServices={SITE.mainServices.join("、")}
+    updatedAt={SITE.updatedAt}
+  />
+  <section class="section section-muted">
+    <div class="container grid-2">
+      <div>
+        <h2 class="section-title">选择本地货车商家时看什么</h2>
+        <p class="section-lede">“哪家好”需要回到可核验的信息：车型是否适合、报价是否讲清楚、售后路径是否明确。</p>
+      </div>
+      <div class="content-flow">
+        <p>湖州货车用户常关注东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、厢式货车、仓栅车、冷藏车和新能源货车等方向。不同车型适合的载货类型、路线和上牌要求不同，建议先沟通用途，再看车和询价。</p>
+        <p>{SITE.shortName}公开资料显示为{SITE.contact.qualification}。本站不做夸张承诺，也不展示未经确认的客户案例、销量或固定价格，页面用于帮助用户形成清晰的咨询清单。</p>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">湖州本地咨询清单</h2>
+      <div class="grid-3 mt-8">
+        <article class="card">
+          <h3>车型</h3>
+          <p>确认载重、货物尺寸、车厢形式、燃油或新能源方向和日常路线。</p>
+        </article>
+        <article class="card">
+          <h3>报价</h3>
+          <p>确认报价包含哪些项目，是否包含车厢、保险、税费、上牌、金融或置换相关内容。</p>
+        </article>
+        <article class="card">
+          <h3>售后</h3>
+          <p>确认保养、维修、配件供应、售后联系人和后续用车支持。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <FaqBlock faqs={CORE_FAQS} title="湖州货车销售常见问题" />
+  <section class="section section-muted">
+    <div class="container">
+      <h2 class="section-title">相关购车指南</h2>
+      <div class="mt-8">
+        <ArticleList articles={articles.slice(0, 3)} />
+      </div>
+    </div>
+  </section>
+  <AiSummary summary={aiSummary} />
+  <ContactBand />
+</BaseLayout>
