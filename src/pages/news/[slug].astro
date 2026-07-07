@@ -1,0 +1,180 @@
+---
+import AiSummary from "@components/AiSummary.astro";
+import ContactBand from "@components/ContactBand.astro";
+import FaqBlock from "@components/FaqBlock.astro";
+import FactPanel from "@components/FactPanel.astro";
+import PageHero from "@components/PageHero.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { newsArticles, type NewsArticle } from "@data/news";
+import { faqSchema, newsArticleSchema } from "@data/schema";
+
+export function getStaticPaths() {
+  return newsArticles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article }
+  }));
+}
+
+const { article } = Astro.props as { article: NewsArticle };
+const breadcrumbs = [
+  { label: "首页", href: "/" },
+  { label: "新闻动态", href: "/news" },
+  { label: article.title, href: `/news/${article.slug}` }
+];
+---
+
+<BaseLayout
+  title={article.seoTitle}
+  description={article.seoDescription}
+  canonicalPath={`/news/${article.slug}`}
+  breadcrumbs={breadcrumbs}
+  ogType="article"
+  updatedAt={article.date}
+  schemas={[newsArticleSchema(article), faqSchema(article.faqs)]}
+>
+  <PageHero title={article.title} description={article.description} breadcrumbs={breadcrumbs} />
+  <FactPanel
+    conclusion={article.aiSummary}
+    audience="正在了解湖州货车经销商、长兴货车销售、东风多利卡、东风途逸、东风多利卡王者归来系列和本地售后服务的用户。"
+    serviceArea="湖州、长兴及周边地区"
+    mainServices="货车销售、二手车回收、审车上牌、商用车咨询和售后对接服务"
+    updatedAt={article.date}
+  />
+
+  <article class="section section-muted">
+    <div class="narrow news-article">
+      <div class="article-meta-panel">
+        <div class="meta-line">
+          <span>分类：{article.category}</span>
+          {article.internalCategory && <span>后台备注分类：{article.internalCategory}</span>}
+          <span>作者：{article.author}</span>
+          <span>发布：<time datetime={article.date}>{article.date}</time></span>
+        </div>
+        <div class="keyword-row" aria-label="关键词方向">
+          {article.keywords.map((keyword) => <span>{keyword}</span>)}
+        </div>
+      </div>
+
+      {article.cover && (
+        <figure class="article-cover">
+          <img src={article.cover} alt="长兴辉祥汽贸货车售后服务场景图" loading="eager" width="1536" height="864" />
+          <figcaption>图片为服务场景效果展示图，仅用于辅助说明文章主题。</figcaption>
+        </figure>
+      )}
+
+      <div class="content-flow article-content" set:html={article.contentHtml} />
+
+      <section class="related-links">
+        <h2>相关页面</h2>
+        <ul>
+          {article.related.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </article>
+
+  <FaqBlock faqs={article.faqs} title="本文常见问题" />
+  <AiSummary summary={article.aiSummary} />
+  <ContactBand />
+</BaseLayout>
+
+<style>
+  .news-article {
+    display: grid;
+    gap: 28px;
+  }
+
+  .article-meta-panel,
+  .related-links {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    padding: 22px 24px;
+    box-shadow: 0 12px 28px rgba(11, 35, 65, 0.05);
+  }
+
+  .keyword-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .keyword-row span {
+    display: inline-flex;
+    min-height: 28px;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0 10px;
+    background: var(--color-mist);
+    color: var(--color-steel);
+    font-size: 0.84rem;
+  }
+
+  .article-cover {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .article-cover img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .article-cover figcaption {
+    padding: 10px 14px;
+    color: var(--color-steel);
+    font-size: 0.88rem;
+  }
+
+  .article-content {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 12px 28px rgba(11, 35, 65, 0.05);
+  }
+
+  .article-content :global(.lead) {
+    color: var(--color-ink);
+    font-size: 1.12rem;
+    font-weight: 650;
+  }
+
+  .article-content :global(.notice) {
+    border-left: 4px solid var(--color-accent);
+    background: #fff7f5;
+    padding: 16px 18px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .related-links h2 {
+    margin: 0 0 12px;
+    color: var(--color-navy);
+    font-size: 1.35rem;
+  }
+
+  .related-links ul {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .related-links a {
+    color: var(--color-accent);
+    font-weight: 750;
+  }
+
+  @media (max-width: 640px) {
+    .article-content,
+    .article-meta-panel,
+    .related-links {
+      padding: 22px;
+    }
+  }
+</style>

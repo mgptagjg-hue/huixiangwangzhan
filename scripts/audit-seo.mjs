@@ -2,7 +2,23 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve("dist");
-const banned = ["最好", "第一", "包过", "最低价", "权威推荐"];
+const banned = [
+  "最好",
+  "第一",
+  "包过",
+  "最低价",
+  "权威推荐",
+  "最便宜",
+  "最实惠",
+  "唯一",
+  "官方唯一",
+  "绝对",
+  "保证赚钱",
+  "必有现车",
+  "终身免费",
+  "全网最低",
+  "行业第一"
+];
 const requiredPages = [
   "index.html",
   "about/index.html",

@@ -1,4 +1,6 @@
 import { articles, type Article } from "./articles";
+import { dongfengDolicaModels } from "./dongfengDolicaModels";
+import type { NewsArticle } from "./news";
 import { CORE_FAQS, NAV_ITEMS, SERVICE_ITEMS, SITE } from "./site";
 
 const absoluteUrl = (path: string) => new URL(path, SITE.url).toString();
@@ -15,8 +17,8 @@ const openingHoursSpecification = [
   {
     "@type": "OpeningHoursSpecification",
     dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-    opens: "08:30",
-    closes: "17:30"
+    opens: "08:00",
+    closes: "17:00"
   }
 ];
 
@@ -51,7 +53,7 @@ export function autoDealerSchema() {
     description: SITE.description,
     telephone: SITE.contact.phone,
     address: postalAddress,
-    openingHours: "Mo-Su 08:30-17:30",
+    openingHours: "Mo-Su 08:00-17:00",
     openingHoursSpecification,
     areaServed: SITE.serviceAreas,
     brand: SITE.mainBrands,
@@ -139,6 +141,31 @@ export function articleSchema(article: Article) {
   };
 }
 
+export function newsArticleSchema(article: NewsArticle) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.seoDescription,
+    keywords: article.keywords.join(", "),
+    datePublished: article.date,
+    dateModified: article.date,
+    articleSection: article.category,
+    author: {
+      "@type": "Organization",
+      name: article.author
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE.name,
+      logo: absoluteUrl("/logo-huixiang.png")
+    },
+    image: article.cover ? absoluteUrl(article.cover) : absoluteUrl("/images/vehicles/hero-3d-truck.png"),
+    mainEntityOfPage: absoluteUrl(`/news/${article.slug}`),
+    inLanguage: "zh-CN"
+  };
+}
+
 export function pageArticleSchema(page: {
   title: string;
   description: string;
@@ -175,6 +202,37 @@ export function itemListSchema() {
       position: index + 1,
       url: absoluteUrl(`/guides/${article.slug}`),
       name: article.title
+    }))
+  };
+}
+
+export function dolicaModelItemListSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "东风多利卡系列车型配置参考",
+    description:
+      "长兴辉祥汽贸整理东风多利卡 D5、D6-M、K6-M、K6-L 和东风多利卡王者归来系列常见配置，供湖州长兴货车用户选车参考。",
+    itemListElement: dongfengDolicaModels.map((model, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: absoluteUrl(`/trucks#${model.id}`),
+      item: {
+        "@type": "Product",
+        name: model.name,
+        brand: "东风多利卡",
+        category: model.series,
+        description: model.sellingPoint,
+        additionalProperty: [
+          { "@type": "PropertyValue", name: "驾驶室大小", value: model.cabSize },
+          { "@type": "PropertyValue", name: "发动机", value: model.engine },
+          { "@type": "PropertyValue", name: "马力", value: model.horsepower },
+          { "@type": "PropertyValue", name: "变速箱", value: model.gearbox },
+          { "@type": "PropertyValue", name: "车厢尺寸", value: model.cargoSize },
+          { "@type": "PropertyValue", name: "可咨询颜色", value: model.colors.join("、") },
+          { "@type": "PropertyValue", name: "适合场景", value: model.suggestedUse.join("、") }
+        ]
+      }
     }))
   };
 }

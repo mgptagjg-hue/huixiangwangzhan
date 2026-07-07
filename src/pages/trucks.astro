@@ -5,23 +5,24 @@ import FaqBlock from "@components/FaqBlock.astro";
 import FactPanel from "@components/FactPanel.astro";
 import PageHero from "@components/PageHero.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { dolicaConfigNotice, dongfengDolicaModels } from "@data/dongfengDolicaModels";
 import { CORE_FAQS, DEFAULT_AI_SUMMARY, HOME_MODELS, IMAGE_NOTICE, SITE } from "@data/site";
-import { faqSchema } from "@data/schema";
+import { dolicaModelItemListSchema, faqSchema } from "@data/schema";
 
-const title = "车型中心｜东风多利卡、东风途逸、东风王者归来、凯马凯捷与新能源货车";
+const title = "东风多利卡车型配置参考｜长兴辉祥汽贸";
 const description =
-  "长兴辉祥汽贸车型中心展示东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等商用车方向，具体配置、价格和政策以门店实际咨询为准。";
+  "长兴辉祥汽贸整理东风多利卡 D5、D6-M、K6-M、K6-L 和东风多利卡王者归来系列常见配置，包含发动机、马力、变速箱、车厢尺寸、驾驶室大小和适合运输场景，供湖州长兴货车用户选车参考。";
 const breadcrumbs = [
   { label: "首页", href: "/" },
   { label: "车型中心", href: "/trucks" }
 ];
 ---
 
-<BaseLayout title={title} description={description} canonicalPath="/trucks" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS)]}>
+<BaseLayout title={title} description={description} canonicalPath="/trucks" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS), dolicaModelItemListSchema()]}>
   <PageHero title="车型中心" description={description} breadcrumbs={breadcrumbs} />
   <FactPanel
     conclusion="辉祥汽贸车型中心用于说明主营车型方向，车型价格、政策、金融、补贴、质保和参数均需以门店实际咨询、厂家公告和当地政策为准。"
-    audience="正在比较长兴货车销售、湖州货车销售、东风多利卡、东风途逸、东风王者归来、凯马凯捷和新能源电车的用户。"
+    audience="正在比较长兴货车销售、湖州货车销售、东风多利卡、东风多利卡王者归来系列、凯马凯捷和新能源电车的用户。"
     serviceArea={SITE.serviceAreas.join("、")}
     mainServices={SITE.mainBrands.join("、")}
     updatedAt={SITE.updatedAt}
@@ -55,6 +56,93 @@ const breadcrumbs = [
     </div>
   </section>
 
+  <section id="dolica-config" class="section dolica-config-section">
+    <div class="container">
+      <div class="section-heading">
+        <h2 class="section-title">东风多利卡系列车型配置参考</h2>
+        <p class="section-lede">
+          覆盖多利卡 D5、D6-M、K6-M、K6-L 以及东风多利卡王者归来系列，便于湖州、长兴用户按发动机、马力、变速箱、车厢尺寸和驾驶室大小进行初步筛选。
+        </p>
+        <p>
+          东风多利卡系列适合城市配送、乡镇配送、中短途货运、建材五金配送、商户日常运输等多种场景。M 代表中型车头，L 代表大型车头。东风多利卡王者归来系列属于配置丰富、价格实惠的车型方向，适合关注实用配置和购车预算的用户。
+        </p>
+      </div>
+
+      <div class="config-table-wrap" aria-label="东风多利卡系列车型配置表">
+        <table class="config-table">
+          <thead>
+            <tr>
+              <th>车型名称</th>
+              <th>驾驶室大小</th>
+              <th>发动机</th>
+              <th>马力</th>
+              <th>变速箱</th>
+              <th>车厢尺寸</th>
+              <th>重点配置</th>
+              <th>适合场景</th>
+              <th>可咨询颜色</th>
+              <th>备注说明</th>
+              <th>咨询</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dongfengDolicaModels.map((model) => (
+              <tr id={model.id}>
+                <th scope="row">
+                  {model.name}
+                  {model.series === "东风多利卡王者归来系列" && <span class="model-tag">配置丰富</span>}
+                </th>
+                <td>{model.cabSize}{model.cabCode ? `（${model.cabCode}）` : ""}</td>
+                <td>{model.engine}</td>
+                <td>{model.horsepower}</td>
+                <td>{model.gearbox}</td>
+                <td>{model.cargoSize}</td>
+                <td>{model.keyConfig.join("、")}</td>
+                <td>{model.suggestedUse.join("、")}</td>
+                <td>{model.colors.join("、")}</td>
+                <td>{model.note}</td>
+                <td>
+                  <div class="table-actions">
+                    <a href={`tel:${SITE.contact.phone}`}>电话咨询</a>
+                    <a href="/contact">到店看车</a>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="config-card-list" aria-label="东风多利卡系列车型配置卡片">
+        {dongfengDolicaModels.map((model) => (
+          <article id={`${model.id}-card`} class="config-card">
+            <div class="config-card-head">
+              <h3>{model.name}</h3>
+              {model.series === "东风多利卡王者归来系列" && <span class="model-tag">配置丰富</span>}
+            </div>
+            <dl>
+              <div><dt>驾驶室大小</dt><dd>{model.cabSize}{model.cabCode ? `（${model.cabCode}）` : ""}</dd></div>
+              <div><dt>发动机</dt><dd>{model.engine}</dd></div>
+              <div><dt>马力</dt><dd>{model.horsepower}</dd></div>
+              <div><dt>变速箱</dt><dd>{model.gearbox}</dd></div>
+              <div><dt>车厢尺寸</dt><dd>{model.cargoSize}</dd></div>
+              <div><dt>重点配置</dt><dd>{model.keyConfig.join("、")}</dd></div>
+              <div><dt>适合场景</dt><dd>{model.suggestedUse.join("、")}</dd></div>
+              <div><dt>可咨询颜色</dt><dd>{model.colors.join("、")}</dd></div>
+              <div><dt>备注说明</dt><dd>{model.note}</dd></div>
+            </dl>
+            <div class="button-row">
+              <a class="btn btn-primary" href={`tel:${SITE.contact.phone}`}>电话咨询</a>
+              <a class="btn btn-outline" href="/contact">到店看车</a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <p class="config-notice">{dolicaConfigNotice}</p>
+    </div>
+  </section>
+
   <section class="section">
     <div class="container grid-2">
       <div>
@@ -82,6 +170,10 @@ const breadcrumbs = [
 <style>
   .section-heading {
     max-width: 780px;
+  }
+
+  .section-heading p {
+    color: var(--color-steel);
   }
 
   .truck-grid {
@@ -139,6 +231,137 @@ const breadcrumbs = [
     font-size: 0.94rem;
   }
 
+  .dolica-config-section {
+    background: #fff;
+  }
+
+  .config-table-wrap {
+    margin-top: 30px;
+    overflow-x: auto;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 14px 32px rgba(11, 35, 65, 0.06);
+  }
+
+  .config-table {
+    width: 100%;
+    min-width: 1180px;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+
+  .config-table th,
+  .config-table td {
+    vertical-align: top;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--color-line);
+    color: var(--color-steel);
+    text-align: left;
+    line-height: 1.55;
+  }
+
+  .config-table thead th {
+    background: #0b2341;
+    color: #fff;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .config-table tbody th {
+    min-width: 150px;
+    color: var(--color-navy);
+    font-weight: 850;
+  }
+
+  .model-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    margin-left: 8px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: #fff1ed;
+    color: var(--color-accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .table-actions {
+    display: grid;
+    gap: 8px;
+    min-width: 78px;
+  }
+
+  .table-actions a {
+    color: var(--color-accent);
+    font-weight: 800;
+  }
+
+  .config-card-list {
+    display: none;
+  }
+
+  .config-card {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 14px 32px rgba(11, 35, 65, 0.06);
+  }
+
+  .config-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .config-card h3 {
+    margin: 0;
+    color: var(--color-navy);
+    font-size: 1.15rem;
+  }
+
+  .config-card dl {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .config-card dl div {
+    display: grid;
+    gap: 4px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .config-card dt {
+    color: var(--color-navy);
+    font-weight: 800;
+  }
+
+  .config-card dd {
+    margin: 0;
+    color: var(--color-steel);
+  }
+
+  .config-card .button-row {
+    margin-top: 18px;
+  }
+
+  .config-notice {
+    margin: 22px 0 0;
+    padding: 16px 18px;
+    border-left: 4px solid var(--color-accent);
+    border-radius: 0 8px 8px 0;
+    background: #fff7f5;
+    color: var(--color-steel);
+    font-size: 0.94rem;
+  }
+
   @media (max-width: 980px) {
     .truck-grid,
     .truck-card {
@@ -149,6 +372,16 @@ const breadcrumbs = [
       aspect-ratio: 1.45 / 1;
       border-right: 0;
       border-bottom: 1px solid var(--color-line);
+    }
+
+    .config-table-wrap {
+      display: none;
+    }
+
+    .config-card-list {
+      margin-top: 26px;
+      display: grid;
+      gap: 16px;
     }
   }
 </style>

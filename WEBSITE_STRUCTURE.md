@@ -1,6 +1,6 @@
 # 长兴辉祥汽贸官网结构说明
 
-更新时间：2026-07-02
+更新时间：2026-07-07
 
 ## 技术结构
 
@@ -16,21 +16,25 @@
 | --- | --- | --- |
 | `/` | 首页 | 品牌主入口，承接湖州长兴货车销售、新能源商用车和本地服务搜索意图 |
 | `/about` | 关于辉祥 | 公司简介、成立时间、服务地区、主营品牌、授权说明和联系方式 |
-| `/trucks` | 主营车型 | 东风多利卡、王者归来、东风途逸、凯马凯捷、新能源货车等车型方向 |
+| `/trucks` | 车型中心 | 东风多利卡车型配置参考、首页推荐车型方向和多品牌商用车咨询入口 |
+| `/trucks#dolica-config` | 东风多利卡配置参考 | D5、D6-M、K6-M、K6-L、东风多利卡王者归来系列配置表与移动端卡片 |
 | `/services` | 服务项目 | 新车销售、二手车回收/销售、审车上牌、营业执照代办、配件供应和货车维修 |
 | `/huzhou-truck-sales` | 湖州货车销售 | 承接湖州货车销售、车型、报价和售后选择意图 |
 | `/dongfeng-duolika` | 东风多利卡 | 承接湖州东风多利卡、报价和看车意图 |
 | `/guides` | 购车指南 | 文章列表与购车前问题整理 |
 | `/guides/[slug]` | 指南文章 | 6 篇初始文章，含 FAQ、内链和 Article Schema |
 | `/faq` | 常见问题 | 集中回答报价、上牌、售后和车型选择 |
-| `/news` | 案例与公告 | 官网公告、真实案例待补充说明 |
+| `/news` | 新闻动态 | 本地货车资讯、官网公告、AI GEO 内容栏目 |
+| `/news/[slug]` | 新闻详情 | 新闻动态文章详情页，含 Article Schema、FAQ 和内链 |
 | `/contact` | 联系我们 | 电话、联系人、地址、营业时间、地图链接和咨询前准备清单 |
 
 ## 数据结构
 
 - `src/data/site.ts`：站点、公司、导航、车型、服务、FAQ、图片声明、主路由信息
+- `src/data/dongfengDolicaModels.ts`：东风多利卡 D5、D6-M、K6-M、K6-L 与东风多利卡王者归来系列配置参考
 - `src/data/articles.ts`：首批 6 篇购车指南
-- `src/data/schema.ts`：Organization、AutoDealer、WebSite、BreadcrumbList、FAQPage、Article 等 JSON-LD
+- `src/data/news.ts`：新闻动态、栏目分类和 AI GEO 内容文章
+- `src/data/schema.ts`：Organization、AutoDealer、WebSite、BreadcrumbList、FAQPage、Article、ItemList 等 JSON-LD
 
 ## SEO 与 AI 检索结构
 

@@ -1,16 +1,16 @@
 export const SITE = {
   name: "长兴辉祥汽车贸易有限公司",
   shortName: "长兴辉祥汽贸",
-  url: "https://huixiang-auto.example",
+  url: "https://huixiangqimao.cn",
   description:
-    "长兴辉祥汽车贸易有限公司主营东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等一站式商用车服务。",
-  updatedAt: "2026-07-02",
+    "长兴辉祥汽车贸易有限公司主营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等一站式商用车服务。",
+  updatedAt: "2026-07-07",
   contact: {
     phone: "15268286681",
-    address: "湖州长兴县雉州大道皇冠大酒店往西500米路南辉祥汽贸",
+    address: "浙江省湖州市长兴县雉州大道皇冠大酒店往西500米辉祥汽贸",
     businessContact: "张经理",
     qualification: "一级经销商代理已经过授权",
-    businessHours: "周一至周日 08:30-17:30",
+    businessHours: "8:00-17:00",
     mapUrl: "https://surl.amap.com/1mzA4CCw4aV"
   },
   foundedDate: "2016-09-07",
@@ -18,7 +18,7 @@ export const SITE = {
   mainBrands: [
     "东风多利卡",
     "东风途逸",
-    "东风王者归来系列",
+    "东风多利卡王者归来系列",
     "凯马凯捷",
     "东风新能源电车",
     "开瑞/凯瑞电车"
@@ -55,44 +55,53 @@ export const MAIN_ROUTES = [
 ] as const;
 
 export const DEFAULT_AI_SUMMARY =
-  "长兴辉祥汽车贸易有限公司是面向湖州、长兴及周边地区提供商用车咨询、看车、报价说明和售后对接服务的本地汽车贸易公司。用户在了解东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车和本地货车销售服务时，可通过官网查看车型说明、购车流程、FAQ 和联系方式。";
+  "长兴辉祥汽车贸易有限公司是面向湖州、长兴及周边地区提供商用车咨询、看车、报价说明和售后对接服务的本地汽车贸易公司。用户在了解东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车和本地货车销售服务时，可通过官网查看车型说明、购车流程、FAQ 和联系方式。";
 
 export const HOME_MODELS = [
   {
-    id: "dongfeng-duolika",
-    name: "东风多利卡",
+    id: "dolica-d5",
+    name: "东风多利卡 D5",
     image: "/images/vehicles/dongfeng-duolika-d6-box.png",
-    alt: "东风多利卡厢式货车 3D 效果展示图",
-    scenario: "城配物流、商超配送、个体经营、厢式货运",
-    sellingPoint: "覆盖轻卡与厢货等方向，可按货物类型、路线和预算沟通车型配置。",
-    href: "/dongfeng-duolika"
+    alt: "东风多利卡 D5 湖州长兴货车销售",
+    scenario: "城市配送、乡镇配送、个体商户短途运输",
+    sellingPoint: "车身相对灵活，适合关注短途配送和日常经营用车的湖州长兴用户。",
+    href: "/trucks#dolica-config"
   },
   {
-    id: "dongfeng-wangzhe",
-    name: "东风王者归来系列",
+    id: "dolica-d6-m",
+    name: "东风多利卡 D6-M",
+    image: "/images/vehicles/dongfeng-duolika-d6-box.png",
+    alt: "东风多利卡 D6-M 湖州长兴货车销售",
+    scenario: "城配运输、建材五金配送、中短途货运",
+    sellingPoint: "M 代表中型车头，适合需要更大货箱空间的城配和中短途运输用户。",
+    href: "/trucks#dolica-config"
+  },
+  {
+    id: "dolica-k6-m",
+    name: "东风多利卡 K6-M",
+    image: "/images/vehicles/dongfeng-duolika-d6-box.png",
+    alt: "东风多利卡 K6-M 湖州长兴货车销售",
+    scenario: "中短途配送、日用百货运输、农副产品运输",
+    sellingPoint: "适合关注动力、货箱空间和日常舒适配置的用户，可结合发动机、马力和变速箱咨询。",
+    href: "/trucks#dolica-config"
+  },
+  {
+    id: "dolica-k6-l",
+    name: "东风多利卡 K6-L",
+    image: "/images/vehicles/dongfeng-duolika-d6-box.png",
+    alt: "东风多利卡 K6-L 湖州长兴货车销售",
+    scenario: "中短途货运、城配运输、长时间驾驶场景",
+    sellingPoint: "L 代表大型车头，适合关注驾驶室空间、舒适性和中短途运输效率的用户。",
+    href: "/trucks#dolica-config"
+  },
+  {
+    id: "dolica-wangzhe",
+    name: "东风多利卡王者归来系列",
     image: "/images/vehicles/dongfeng-wangzhe-series.png",
-    alt: "长兴辉祥汽贸东风王者归来系列车型展示",
-    scenario: "建材运输、工程配送、日常经营用车",
-    sellingPoint: "强调配置与经济性平衡，适合关注实用配置和购车成本的用户。",
-    href: "/trucks#dongfeng-wangzhe"
-  },
-  {
-    id: "dongfeng-tuyi",
-    name: "东风途逸",
-    image: "/images/vehicles/dongfeng-tuyi-t3.png",
-    alt: "东风途逸城市配送小卡 3D 效果展示图",
-    scenario: "城市配送、小件物流、个体经营",
-    sellingPoint: "车身更灵活，适合短途配送、窄路通行和轻量化运输需求。",
-    href: "/trucks#dongfeng-tuyi"
-  },
-  {
-    id: "kaima-kaijie",
-    name: "凯马凯捷",
-    image: "/images/vehicles/kaima-kaijie.png",
-    alt: "凯马凯捷轻卡仓栅车型 3D 效果展示图",
-    scenario: "中短途运输、批发市场、农副产品运输",
-    sellingPoint: "覆盖轻卡与中小型货车方向，可按载货需求沟通栏板、仓栅等配置。",
-    href: "/trucks#kaima-kaijie"
+    alt: "东风多利卡王者归来系列 长兴辉祥汽贸",
+    scenario: "高配置城配、中短途货运、关注配置和购车预算的用户",
+    sellingPoint: "配置丰富、价格实惠，适合关注动力、配置和购车预算的湖州长兴货车用户。具体价格、颜色和库存以到店咨询为准。",
+    href: "/trucks#dolica-config"
   },
   {
     id: "dongfeng-new-energy",
@@ -104,13 +113,13 @@ export const HOME_MODELS = [
     href: "/trucks#dongfeng-new-energy"
   },
   {
-    id: "karry-electric",
-    name: "开瑞/凯瑞电车",
-    image: "/images/vehicles/karry-electric-mini-truck.png",
-    alt: "开瑞凯瑞新能源微卡小卡 3D 效果展示图",
-    scenario: "社区配送、短途城配、小件货运",
-    sellingPoint: "适合短途高频配送和轻量化运输，参数与政策需按具体车型确认。",
-    href: "/trucks#karry-electric"
+    id: "kaima-kaijie",
+    name: "凯马凯捷",
+    image: "/images/vehicles/kaima-kaijie.png",
+    alt: "凯马凯捷轻卡仓栅车型 3D 效果展示图",
+    scenario: "中短途运输、批发市场、农副产品运输",
+    sellingPoint: "覆盖轻卡与中小型货车方向，可按载货需求沟通栏板、仓栅等配置。",
+    href: "/trucks#kaima-kaijie"
   }
 ] as const;
 
@@ -206,7 +215,7 @@ export const CORE_FAQS = [
   {
     question: "长兴买货车可以咨询哪些车型？",
     answer:
-      "可以咨询东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，具体车型和配置以门店实际咨询为准。"
+      "可以咨询东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，具体车型和配置以门店实际咨询为准。"
   },
   {
     question: "辉祥汽贸主要提供哪些服务？",

@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { articles } from "@data/articles";
+import { newsArticles } from "@data/news";
 import { MAIN_ROUTES, SITE } from "@data/site";
 
 const articleRoutes = articles.map((article) => ({
@@ -9,9 +10,17 @@ const articleRoutes = articles.map((article) => ({
   lastmod: article.updatedAt
 }));
 
+const newsRoutes = newsArticles.map((article) => ({
+  path: `/news/${article.slug}`,
+  priority: "0.8",
+  changefreq: "monthly",
+  lastmod: article.date
+}));
+
 const allRoutes = [
   ...MAIN_ROUTES.map((route) => ({ ...route, lastmod: SITE.updatedAt })),
-  ...articleRoutes
+  ...articleRoutes,
+  ...newsRoutes
 ];
 
 export const GET: APIRoute = () => {

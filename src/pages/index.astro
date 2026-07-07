@@ -1,11 +1,12 @@
 ---
 import ContactBand from "@components/ContactBand.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { dolicaConfigNotice } from "@data/dongfengDolicaModels";
+import { newsArticles } from "@data/news";
 import {
   CORE_FAQS,
   DEFAULT_AI_SUMMARY,
   HOME_MODELS,
-  HOME_NEWS,
   IMAGE_NOTICE,
   PROCESS_STEPS,
   SERVICE_ITEMS,
@@ -16,8 +17,9 @@ import { faqSchema } from "@data/schema";
 
 const title = "长兴辉祥汽车贸易有限公司｜湖州长兴货车销售、东风多利卡与商用车服务";
 const description =
-  "长兴辉祥汽车贸易有限公司主营东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等一站式商用车服务。";
+  "长兴辉祥汽车贸易有限公司主营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等一站式商用车服务。";
 const homeFaqs = CORE_FAQS.slice(0, 5);
+const latestNews = newsArticles.slice(0, 3);
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/" schemas={[faqSchema(homeFaqs)]}>
@@ -35,11 +37,12 @@ const homeFaqs = CORE_FAQS.slice(0, 5);
         <p class="hero-kicker">长兴货车销售 · 湖州货车销售 · 本地商用车服务</p>
         <h1>长兴辉祥汽贸｜湖州长兴商用车销售与一站式服务</h1>
         <p>
-          主营东风多利卡、东风途逸、东风王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，为城市物流、工程建设、企业运输和个体经营客户提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等服务。
+          主营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，为城市物流、工程建设、企业运输和个体经营客户提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等服务。
         </p>
         <div class="button-row">
-          <a class="btn btn-primary" href="/contact">购车咨询</a>
-          <a class="btn btn-secondary" href="/trucks">查看车型</a>
+          <a class="btn btn-primary" href="/trucks#dolica-config">查看车型配置</a>
+          <a class="btn btn-secondary" href={`tel:${SITE.contact.phone}`}>电话咨询</a>
+          <a class="btn btn-secondary" href="/contact">到店看车</a>
         </div>
       </div>
     </div>
@@ -52,6 +55,26 @@ const homeFaqs = CORE_FAQS.slice(0, 5);
         <p class="section-lede">
           覆盖轻卡、小卡、厢式货车、新能源电车、工程车及城市配送车型，适合城配物流、工地运输、商超配送、个体经营等场景。
         </p>
+      </div>
+      <div class="model-feature-row">
+        <article class="model-feature-card">
+          <p class="eyeless-label">重点推荐</p>
+          <h3>东风多利卡王者归来系列</h3>
+          <p>配置丰富、价格实惠，适合关注动力、配置和购车预算的湖州长兴货车用户。具体价格、颜色和库存以到店咨询为准。</p>
+          <div class="button-row compact">
+            <a class="btn btn-primary" href="/trucks#dolica-config">查看车型配置</a>
+            <a class="btn btn-outline" href={`tel:${SITE.contact.phone}`}>电话咨询</a>
+          </div>
+        </article>
+        <article class="model-feature-card">
+          <p class="eyeless-label">车型系列</p>
+          <h3>东风多利卡系列</h3>
+          <p>覆盖 D5、D6-M、K6-M、K6-L 等常见车型，适合城市配送、乡镇配送、中短途货运和商户日常运输。可根据发动机、马力、变速箱、车厢尺寸和驾驶室大小选择。</p>
+          <div class="button-row compact">
+            <a class="btn btn-outline" href="/trucks#dolica-config">查看车型配置</a>
+            <a class="btn btn-outline" href="/contact">到店看车</a>
+          </div>
+        </article>
       </div>
       <div class="model-grid">
         {HOME_MODELS.map((model) => (
@@ -69,6 +92,7 @@ const homeFaqs = CORE_FAQS.slice(0, 5);
         ))}
       </div>
       <p class="image-notice">{IMAGE_NOTICE}</p>
+      <p class="config-notice">{dolicaConfigNotice}</p>
     </div>
   </section>
 
@@ -145,10 +169,10 @@ const homeFaqs = CORE_FAQS.slice(0, 5);
           <a href="/news">更多动态</a>
         </div>
         <div class="home-news-list">
-          {HOME_NEWS.map((item) => (
+          {latestNews.map((item) => (
             <article>
-              <time datetime={item.updatedAt}>{item.updatedAt}</time>
-              <h3><a href={item.href}>{item.title}</a></h3>
+              <time datetime={item.date}>{item.date}</time>
+              <h3><a href={`/news/${item.slug}`}>{item.title}</a></h3>
               <p>{item.description}</p>
             </article>
           ))}
@@ -256,6 +280,37 @@ const homeFaqs = CORE_FAQS.slice(0, 5);
     gap: 22px;
   }
 
+  .model-feature-row {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .model-feature-card {
+    min-width: 0;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-left: 4px solid var(--color-accent);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 14px 32px rgba(11, 35, 65, 0.06);
+  }
+
+  .model-feature-card h3 {
+    margin: 0 0 10px;
+    color: var(--color-navy);
+    font-size: 1.36rem;
+  }
+
+  .model-feature-card p {
+    color: var(--color-steel);
+  }
+
+  .button-row.compact {
+    margin-top: 16px;
+  }
+
   .model-card {
     min-width: 0;
     background: #fff;
@@ -302,6 +357,14 @@ const homeFaqs = CORE_FAQS.slice(0, 5);
 
   .image-notice {
     margin: 24px 0 0;
+    color: var(--color-steel);
+    font-size: 0.94rem;
+    text-align: center;
+  }
+
+  .config-notice {
+    max-width: 980px;
+    margin: 12px auto 0;
     color: var(--color-steel);
     font-size: 0.94rem;
     text-align: center;
@@ -549,6 +612,7 @@ const homeFaqs = CORE_FAQS.slice(0, 5);
       font-size: 2.35rem;
     }
 
+    .model-feature-row,
     .model-grid,
     .faq-news-grid {
       grid-template-columns: 1fr;
