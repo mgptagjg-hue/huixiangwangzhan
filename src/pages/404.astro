@@ -1,0 +1,56 @@
+---
+import ContactBand from "@components/ContactBand.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@data/site";
+
+const title = "页面未找到｜长兴辉祥汽贸";
+const description =
+  "当前访问的页面不存在或已调整。可返回长兴辉祥汽贸官网首页，继续查看车型中心、服务项目、新闻动态和联系方式。";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/404" updatedAt={SITE.updatedAt}>
+  <section class="section not-found-section">
+    <div class="container not-found-inner">
+      <p class="eyeless-label">404</p>
+      <h1>页面未找到</h1>
+      <p>
+        当前访问的页面不存在或已调整。你可以返回首页，或继续查看东风多利卡车型配置、服务项目、新闻动态和联系方式。
+      </p>
+      <div class="button-row">
+        <a class="btn btn-primary" href="/">返回首页</a>
+        <a class="btn btn-outline" href="/trucks#dolica-config">查看车型配置</a>
+        <a class="btn btn-outline" href="/contact">联系我们</a>
+      </div>
+    </div>
+  </section>
+  <ContactBand />
+</BaseLayout>
+
+<style>
+  .not-found-section {
+    background: linear-gradient(180deg, #f4f7fa 0%, #ffffff 100%);
+  }
+
+  .not-found-inner {
+    max-width: 760px;
+  }
+
+  .not-found-inner h1 {
+    margin: 0;
+    color: var(--color-ink);
+    font-size: 2.7rem;
+    line-height: 1.14;
+  }
+
+  .not-found-inner p:not(.eyeless-label) {
+    margin: 18px 0 26px;
+    color: var(--color-steel);
+    font-size: 1.08rem;
+  }
+
+  @media (max-width: 640px) {
+    .not-found-inner h1 {
+      font-size: 2.1rem;
+    }
+  }
+</style>

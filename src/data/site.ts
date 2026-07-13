@@ -1,3 +1,6 @@
+const publicEnv = import.meta.env;
+const publicValue = (value: string | undefined, fallback = "") => value?.trim() || fallback;
+
 export const SITE = {
   name: "长兴辉祥汽车贸易有限公司",
   shortName: "长兴辉祥汽贸",
@@ -12,6 +15,12 @@ export const SITE = {
     qualification: "一级经销商代理已经过授权",
     businessHours: "8:00-17:00",
     mapUrl: "https://surl.amap.com/1mzA4CCw4aV"
+  },
+  recordFiling: {
+    icpNumber: publicValue(publicEnv.PUBLIC_ICP_NUMBER, "浙ICP备2026052872号-1"),
+    icpUrl: publicValue(publicEnv.PUBLIC_ICP_URL, "https://beian.miit.gov.cn/"),
+    policeRecordNumber: publicValue(publicEnv.PUBLIC_POLICE_RECORD_NUMBER),
+    policeRecordUrl: publicValue(publicEnv.PUBLIC_POLICE_RECORD_URL)
   },
   foundedDate: "2016-09-07",
   serviceAreas: ["湖州", "长兴", "安吉", "南浔", "德清", "周边地区"],
