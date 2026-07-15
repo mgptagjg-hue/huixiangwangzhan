@@ -18,7 +18,7 @@ const newsRoutes = newsArticles.map((article) => ({
 }));
 
 const allRoutes = [
-  ...MAIN_ROUTES.map((route) => ({ ...route, lastmod: SITE.updatedAt })),
+  ...MAIN_ROUTES,
   ...articleRoutes,
   ...newsRoutes
 ];

@@ -20,7 +20,10 @@ const {
   breadcrumbs = [],
   schemas = [],
   ogType = "website",
-  updatedAt = SITE.updatedAt
+  ogImage = "/images/vehicles/hero-3d-truck.png",
+  ogImageAlt = "长兴辉祥汽贸商用车展示",
+  updatedAt = SITE.updatedAt,
+  noIndex = false
 } = Astro.props as {
   title: string;
   description: string;
@@ -28,10 +31,14 @@ const {
   breadcrumbs?: Crumb[];
   schemas?: Record<string, unknown>[];
   ogType?: "website" | "article";
+  ogImage?: string;
+  ogImageAlt?: string;
   updatedAt?: string;
+  noIndex?: boolean;
 };
 
 const canonicalUrl = new URL(canonicalPath, SITE.url).toString();
+const ogImageUrl = new URL(ogImage, SITE.url).toString();
 const allSchemas = [
   organizationSchema(),
   autoDealerSchema(),
@@ -50,6 +57,7 @@ const allSchemas = [
     <Fragment set:html={'<meta name="baidu-site-verification" content="codeva-WvxQBXoXv6" />'} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonicalUrl} />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:type" content={ogType} />
@@ -57,10 +65,12 @@ const allSchemas = [
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={new URL("/images/vehicles/hero-3d-truck.png", SITE.url).toString()} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
     <meta name="last-modified" content={updatedAt} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {allSchemas.map((schema) => (

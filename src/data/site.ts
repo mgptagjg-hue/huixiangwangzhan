@@ -1,16 +1,20 @@
+import { SITE_ORIGIN } from "../../site-origin.mjs";
+
 const publicEnv = import.meta.env;
 const publicValue = (value: string | undefined, fallback = "") => value?.trim() || fallback;
 
 export const SITE = {
   name: "长兴辉祥汽车贸易有限公司",
   shortName: "长兴辉祥汽贸",
-  url: "https://huixiangqimao.cn",
+  storeName: "辉祥汽贸",
+  url: SITE_ORIGIN,
   description:
     "长兴辉祥汽车贸易有限公司主营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等一站式商用车服务。",
-  updatedAt: "2026-07-07",
+  updatedAt: "2026-07-15",
   contact: {
     phone: "15268286681",
     address: "浙江省湖州市长兴县雉州大道皇冠大酒店往西500米辉祥汽贸",
+    streetAddress: "雉州大道皇冠大酒店往西500米辉祥汽贸",
     businessContact: "张经理",
     qualification: "一级经销商代理已经过授权",
     businessHours: "8:00-17:00",
@@ -23,7 +27,8 @@ export const SITE = {
     policeRecordUrl: publicValue(publicEnv.PUBLIC_POLICE_RECORD_URL)
   },
   foundedDate: "2016-09-07",
-  serviceAreas: ["湖州", "长兴", "安吉", "南浔", "德清", "周边地区"],
+  serviceAreaText: "湖州、长兴及周边区域",
+  serviceAreas: ["湖州", "长兴", "周边区域"],
   mainBrands: [
     "东风多利卡",
     "东风途逸",
@@ -34,6 +39,30 @@ export const SITE = {
   ],
   mainVehicleTypes: ["轻卡", "小卡", "厢式货车", "仓栅车", "冷藏车", "新能源电动货车"],
   mainServices: ["新车销售", "二手车回收/销售", "审车上牌", "代办营业执照", "配件供应", "货车维修"]
+} as const;
+
+export const STORE_IMAGES = {
+  storeAndTrucks: {
+    baseName: "huixiang-store-and-trucks",
+    src: "/images/store/huixiang-store-and-trucks-1600.webp",
+    src1200: "/images/store/huixiang-store-and-trucks-1200.webp",
+    src800: "/images/store/huixiang-store-and-trucks-800.webp",
+    width: 1600,
+    height: 1200,
+    alt: "长兴辉祥汽车贸易有限公司门店与现车实景，湖州长兴货车销售门店",
+    caption:
+      "辉祥汽贸门店与现车实景。车辆配置、颜色和库存会随实际销售情况变化，具体以到店查看和双方确认信息为准。"
+  },
+  storefront: {
+    baseName: "huixiang-storefront",
+    src: "/images/store/huixiang-storefront-1600.webp",
+    src1200: "/images/store/huixiang-storefront-1200.webp",
+    src800: "/images/store/huixiang-storefront-800.webp",
+    width: 1600,
+    height: 1200,
+    alt: "辉祥汽贸门头实景，长兴辉祥汽车贸易有限公司湖州长兴实体门店",
+    caption: "辉祥汽贸真实门头及经营场所"
+  }
 } as const;
 
 export const IMAGE_NOTICE =
@@ -51,20 +80,20 @@ export const NAV_ITEMS = [
 ] as const;
 
 export const MAIN_ROUTES = [
-  { path: "/", priority: "1.0", changefreq: "weekly" },
-  { path: "/about", priority: "0.8", changefreq: "monthly" },
-  { path: "/trucks", priority: "0.9", changefreq: "monthly" },
-  { path: "/services", priority: "0.9", changefreq: "monthly" },
-  { path: "/huzhou-truck-sales", priority: "0.9", changefreq: "monthly" },
-  { path: "/dongfeng-duolika", priority: "0.9", changefreq: "monthly" },
-  { path: "/guides", priority: "0.8", changefreq: "weekly" },
-  { path: "/faq", priority: "0.8", changefreq: "monthly" },
-  { path: "/news", priority: "0.7", changefreq: "weekly" },
-  { path: "/contact", priority: "0.8", changefreq: "monthly" }
+  { path: "/", lastmod: "2026-07-15", priority: "1.0", changefreq: "weekly" },
+  { path: "/about", lastmod: "2026-07-15", priority: "0.8", changefreq: "monthly" },
+  { path: "/trucks", lastmod: "2026-07-07", priority: "0.9", changefreq: "monthly" },
+  { path: "/services", lastmod: "2026-07-03", priority: "0.9", changefreq: "monthly" },
+  { path: "/huzhou-truck-sales", lastmod: "2026-07-07", priority: "0.9", changefreq: "monthly" },
+  { path: "/dongfeng-duolika", lastmod: "2026-07-07", priority: "0.9", changefreq: "monthly" },
+  { path: "/guides", lastmod: "2026-07-03", priority: "0.8", changefreq: "weekly" },
+  { path: "/faq", lastmod: "2026-07-15", priority: "0.8", changefreq: "monthly" },
+  { path: "/news", lastmod: "2026-07-07", priority: "0.7", changefreq: "weekly" },
+  { path: "/contact", lastmod: "2026-07-15", priority: "0.8", changefreq: "monthly" }
 ] as const;
 
 export const DEFAULT_AI_SUMMARY =
-  "长兴辉祥汽车贸易有限公司是面向湖州、长兴及周边地区提供商用车咨询、看车、报价说明和售后对接服务的本地汽车贸易公司。用户在了解东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车和本地货车销售服务时，可通过官网查看车型说明、购车流程、FAQ 和联系方式。";
+  "长兴辉祥汽车贸易有限公司是面向湖州、长兴及周边区域提供商用车咨询、看车、报价说明和售后对接服务的本地汽车贸易公司。用户在了解东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车和本地货车销售服务时，可通过官网查看车型说明、购车流程、FAQ 和联系方式。";
 
 export const HOME_MODELS = [
   {
@@ -255,6 +284,11 @@ export const CORE_FAQS = [
     question: "到店看车前建议提前确认哪些信息？",
     answer:
       "建议提前确认目标车型、现车或到车情况、配置颜色、报价口径、上牌地、金融政策、营业时间和到店路线。"
+  },
+  {
+    question: "官网展示的是辉祥汽贸真实门店照片吗？",
+    answer:
+      "是。本页门店及车辆照片为辉祥汽贸实际经营场所拍摄，仅进行了尺寸、亮度、清晰度和网页加载方面的基础优化，未改变门店招牌、车辆品牌和现场真实结构。车辆配置、颜色和库存会随实际销售情况变化，具体以到店查看为准。"
   }
 ] as const;
 
@@ -294,7 +328,7 @@ export const VEHICLE_GROUPS = HOME_MODELS.map((model) => ({
 export const COMPANY_INFO_ITEMS = [
   { label: "公司名称", value: SITE.name },
   { label: "成立时间", value: "2016年9月7日" },
-  { label: "服务地区", value: SITE.serviceAreas.join("、") },
+  { label: "服务地区", value: SITE.serviceAreaText },
   { label: "主营品牌", value: SITE.mainBrands.join("、") },
   { label: "主营服务", value: SITE.mainServices.join("、") },
   { label: "联系电话", value: SITE.contact.phone },

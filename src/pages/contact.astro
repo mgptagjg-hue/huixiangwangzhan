@@ -3,8 +3,9 @@ import AiSummary from "@components/AiSummary.astro";
 import FaqBlock from "@components/FaqBlock.astro";
 import FactPanel from "@components/FactPanel.astro";
 import PageHero from "@components/PageHero.astro";
+import StorePhoto from "@components/StorePhoto.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { CORE_FAQS, DEFAULT_AI_SUMMARY, SITE } from "@data/site";
+import { CORE_FAQS, DEFAULT_AI_SUMMARY, SITE, STORE_IMAGES } from "@data/site";
 import { faqSchema } from "@data/schema";
 
 const title = "联系辉祥汽贸｜湖州长兴本地货车咨询与看车服务";
@@ -16,33 +17,51 @@ const breadcrumbs = [
 ];
 ---
 
-<BaseLayout title={title} description={description} canonicalPath="/contact" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS.slice(4))]}>
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath="/contact"
+  breadcrumbs={breadcrumbs}
+  schemas={[faqSchema(CORE_FAQS.slice(4))]}
+  ogImage={STORE_IMAGES.storefront.src}
+  ogImageAlt="辉祥汽贸真实门头"
+>
   <PageHero title="联系辉祥汽贸" description={description} breadcrumbs={breadcrumbs} />
   <FactPanel
     conclusion="联系辉祥汽贸前建议准备车型、载货需求、上牌地、报价口径和服务需求，便于更高效沟通。"
     audience="准备咨询、看车或确认门店信息的湖州、长兴本地用户。"
-    serviceArea={SITE.serviceAreas.join("、")}
+    serviceArea={SITE.serviceAreaText}
     mainServices={SITE.mainServices.join("、")}
     updatedAt={SITE.updatedAt}
   />
   <section class="section section-muted">
-    <div class="container grid-2">
-      <div>
-        <h2 class="section-title">联系信息</h2>
-        <p class="section-lede">以下信息来自本次官网资料采集表。到店看车前建议先电话确认现车、车型、报价口径和营业安排。</p>
-      </div>
-      <div class="card">
+    <div class="container">
+      <h2 class="section-title">联系信息与门店位置</h2>
+      <p class="section-lede">以下为辉祥汽贸实际门店照片和已确认的联系信息。到店看车前建议先电话确认现车、车型、报价口径和营业安排。</p>
+      <div class="contact-store-grid">
+        <StorePhoto
+          src={STORE_IMAGES.storefront.src}
+          src1200={STORE_IMAGES.storefront.src1200}
+          src800={STORE_IMAGES.storefront.src800}
+          alt={STORE_IMAGES.storefront.alt}
+          caption={STORE_IMAGES.storefront.caption}
+          width={STORE_IMAGES.storefront.width}
+          height={STORE_IMAGES.storefront.height}
+          defaultWidth={1200}
+        />
+        <div class="card contact-details">
         <p><strong>公司名称：</strong>{SITE.name}</p>
+        <p><strong>门店名称：</strong>{SITE.storeName}</p>
         <p><strong>联系电话：</strong><a href={`tel:${SITE.contact.phone}`}>{SITE.contact.phone}</a></p>
-        <p><strong>业务联系人：</strong>{SITE.contact.businessContact}</p>
-        <p><strong>门店地址：</strong>{SITE.contact.address}</p>
+        <p><strong>地址：</strong>{SITE.contact.address}</p>
         <p><strong>营业时间：</strong>{SITE.contact.businessHours}</p>
-        <p><strong>公开资质说明：</strong>{SITE.contact.qualification}</p>
-        <p><strong>服务地区：</strong>{SITE.serviceAreas.join("、")}</p>
+        <p><strong>服务地区：</strong>{SITE.serviceAreaText}</p>
         <p><strong>主营业务：</strong>{SITE.mainServices.join("、")}</p>
+        <p class="visit-note">到店前建议电话确认需要咨询的车型、配置、颜色和现车情况，避免因车辆调动或销售变化造成信息差异。</p>
         <div class="button-row mt-8">
           <a class="btn btn-primary" href={`tel:${SITE.contact.phone}`}>立即电话咨询</a>
           <a class="btn btn-outline" href={SITE.contact.mapUrl}>查看高德地图</a>
+        </div>
         </div>
       </div>
     </div>
@@ -69,3 +88,29 @@ const breadcrumbs = [
   <FaqBlock faqs={CORE_FAQS.slice(4)} title="联系前常见问题" />
   <AiSummary summary={DEFAULT_AI_SUMMARY} />
 </BaseLayout>
+
+<style>
+  .contact-store-grid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 28px;
+    align-items: center;
+  }
+
+  .contact-details p + p {
+    margin-top: 8px;
+  }
+
+  .contact-details .visit-note {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-line);
+  }
+
+  @media (max-width: 860px) {
+    .contact-store-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

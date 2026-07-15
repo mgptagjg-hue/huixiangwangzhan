@@ -53,6 +53,33 @@ img {
   max-width: 100%;
 }
 
+.store-photo {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-paper);
+  box-shadow: 0 16px 38px rgba(11, 35, 65, 0.1);
+}
+
+.store-photo picture,
+.store-photo img {
+  display: block;
+  width: 100%;
+}
+
+.store-photo img {
+  height: auto;
+}
+
+.store-photo figcaption {
+  padding: 12px 16px;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-steel);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 :focus-visible {
   outline: 3px solid rgba(244, 123, 32, 0.45);
   outline-offset: 3px;

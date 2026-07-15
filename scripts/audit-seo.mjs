@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import { OFFICIAL_SITE_ORIGIN, SITE_ORIGIN } from "../site-origin.mjs";
 
 const root = path.resolve("dist");
+const companyName = "长兴辉祥汽车贸易有限公司";
 const banned = [
   "最好",
   "第一",
@@ -31,8 +33,10 @@ const requiredPages = [
   "news/index.html",
   "contact/index.html"
 ];
-
+const forbiddenOriginPattern = /huixiang-auto\.example|https?:\/\/(?:localhost|127\.0\.0\.1)(?=[:/]|$)/i;
+const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
 const htmlFiles = [];
+const failures = [];
 
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -48,10 +52,33 @@ function textBetween(source, regex) {
 }
 
 function stripTags(value) {
-  return value.replace(/<[^>]*>/g, "").trim();
+  return value.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-const failures = [];
+function canonicalMatches(html) {
+  return [
+    ...html.matchAll(/<link\s+[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["'][^>]*>/gi),
+    ...html.matchAll(/<link\s+[^>]*href=["']([^"']+)["'][^>]*rel=["']canonical["'][^>]*>/gi)
+  ].map((match) => match[1]);
+}
+
+function builtPathToUrl(relativePath) {
+  if (relativePath === "index.html") return `${OFFICIAL_SITE_ORIGIN}/`;
+  const route = relativePath.replace(/\/index\.html$/, "").replace(/\.html$/, "");
+  return `${OFFICIAL_SITE_ORIGIN}/${route}`;
+}
+
+function isValidDate(value) {
+  return isoDatePattern.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+}
+
+if (SITE_ORIGIN !== OFFICIAL_SITE_ORIGIN) {
+  failures.push(`Resolved origin is ${SITE_ORIGIN}, expected ${OFFICIAL_SITE_ORIGIN}`);
+}
+
+const astroConfig = fs.readFileSync(path.resolve("astro.config.mjs"), "utf8");
+if (astroConfig.includes("huixiang-auto.example")) failures.push("astro.config.mjs contains the example domain");
+if (!astroConfig.includes("SITE_ORIGIN")) failures.push("astro.config.mjs does not use the shared SITE_ORIGIN");
 
 if (!fs.existsSync(root)) {
   failures.push("dist directory does not exist; run npm run build first.");
@@ -68,24 +95,47 @@ if (!fs.existsSync(root)) {
 
   const titles = new Map();
   const descriptions = new Map();
+  const indexableBuiltUrls = [];
 
   for (const file of htmlFiles) {
     const rel = path.relative(root, file).replaceAll("\\", "/");
     const html = fs.readFileSync(file, "utf8");
+    const text = stripTags(html);
     const title = stripTags(textBetween(html, /<title>([\s\S]*?)<\/title>/i));
-    const description = textBetween(html, /<meta name="description" content="([^"]+)"/i);
+    const description = textBetween(html, /<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i);
     const h1Count = (html.match(/<h1[\s>]/gi) ?? []).length;
     const jsonLdBlocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)];
+    const canonicals = canonicalMatches(html);
+    const hasNoIndex = /<meta\s+[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+    const is404 = rel === "404.html";
 
     if (!title) failures.push(`${rel}: missing title`);
     if (!description) failures.push(`${rel}: missing meta description`);
     if (h1Count !== 1) failures.push(`${rel}: expected 1 h1, found ${h1Count}`);
+    if (text.length < 200) failures.push(`${rel}: static HTML body is unexpectedly short`);
+    if (!text.includes(companyName)) failures.push(`${rel}: static HTML does not contain the company name`);
 
     if (titles.has(title)) failures.push(`${rel}: duplicate title also used by ${titles.get(title)}`);
     else titles.set(title, rel);
 
     if (descriptions.has(description)) failures.push(`${rel}: duplicate meta description also used by ${descriptions.get(description)}`);
     else descriptions.set(description, rel);
+
+    if (canonicals.length !== 1) failures.push(`${rel}: expected 1 canonical, found ${canonicals.length}`);
+    if (canonicals[0]) {
+      let canonicalUrl;
+      try {
+        canonicalUrl = new URL(canonicals[0]);
+      } catch {
+        failures.push(`${rel}: invalid canonical ${canonicals[0]}`);
+      }
+      if (canonicalUrl?.origin !== OFFICIAL_SITE_ORIGIN) failures.push(`${rel}: canonical is outside ${OFFICIAL_SITE_ORIGIN}`);
+    }
+
+    if (is404 && !hasNoIndex) failures.push("404.html: missing noindex");
+    if (!is404 && hasNoIndex) failures.push(`${rel}: public page contains noindex`);
+    if (!is404) indexableBuiltUrls.push(builtPathToUrl(rel));
+    if (forbiddenOriginPattern.test(html)) failures.push(`${rel}: contains localhost or a test domain`);
 
     for (const term of banned) {
       if (html.includes(term)) failures.push(`${rel}: contains banned marketing term "${term}"`);
@@ -100,6 +150,54 @@ if (!fs.existsSync(root)) {
       }
     }
   }
+
+  const homepage = fs.existsSync(path.join(root, "index.html")) ? fs.readFileSync(path.join(root, "index.html"), "utf8") : "";
+  for (const requiredText of [companyName, "长兴辉祥汽贸", "15268286681", "浙江省湖州市长兴县", "主营业务", "主营品牌", "服务地区", 'href="/about"', 'href="/services"', 'href="/contact"']) {
+    if (!homepage.includes(requiredText)) failures.push(`index.html: missing crawlable content ${requiredText}`);
+  }
+
+  const sitemapPath = path.join(root, "sitemap.xml");
+  if (fs.existsSync(sitemapPath)) {
+    const sitemap = fs.readFileSync(sitemapPath, "utf8");
+    if (!/^<\?xml[^>]*encoding="UTF-8"[^>]*\?>/i.test(sitemap.trim())) failures.push("sitemap.xml: missing UTF-8 XML declaration");
+    if (!/<urlset\s+xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/i.test(sitemap)) failures.push("sitemap.xml: invalid urlset root");
+
+    const urlBlocks = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/gi)].map((match) => match[1]);
+    const sitemapUrls = [];
+    for (const block of urlBlocks) {
+      const loc = textBetween(block, /<loc>([^<]+)<\/loc>/i);
+      const lastmod = textBetween(block, /<lastmod>([^<]+)<\/lastmod>/i);
+      const changefreq = textBetween(block, /<changefreq>([^<]+)<\/changefreq>/i);
+      const priority = textBetween(block, /<priority>([^<]+)<\/priority>/i);
+      sitemapUrls.push(loc);
+      if (!isValidDate(lastmod)) failures.push(`sitemap.xml: ${loc || "unknown URL"} has invalid lastmod ${lastmod || "missing"}`);
+      if (!changefreq) failures.push(`sitemap.xml: ${loc || "unknown URL"} is missing changefreq`);
+      if (!priority) failures.push(`sitemap.xml: ${loc || "unknown URL"} is missing priority`);
+      try {
+        const url = new URL(loc);
+        if (url.origin !== OFFICIAL_SITE_ORIGIN) failures.push(`sitemap.xml: ${loc} is outside the official origin`);
+        if (url.search || url.hash) failures.push(`sitemap.xml: ${loc} contains a query or hash`);
+      } catch {
+        failures.push(`sitemap.xml: invalid loc ${loc}`);
+      }
+    }
+
+    if (sitemapUrls.length < 17) failures.push(`sitemap.xml: expected at least 17 URLs, found ${sitemapUrls.length}`);
+    if (new Set(sitemapUrls).size !== sitemapUrls.length) failures.push("sitemap.xml: contains duplicate URLs");
+    if (sitemapUrls.some((url) => /\/404(?:\/|$)/.test(url))) failures.push("sitemap.xml: contains the 404 page");
+    for (const builtUrl of indexableBuiltUrls) {
+      if (!sitemapUrls.includes(builtUrl)) failures.push(`sitemap.xml: missing built public page ${builtUrl}`);
+    }
+  }
+
+  const robotsPath = path.join(root, "robots.txt");
+  if (fs.existsSync(robotsPath)) {
+    const robots = fs.readFileSync(robotsPath, "utf8");
+    if (!robots.includes("User-agent: *")) failures.push("robots.txt: missing User-agent: *");
+    if (!robots.includes("Allow: /")) failures.push("robots.txt: missing Allow: /");
+    if (/Disallow:\s*\/$/im.test(robots)) failures.push("robots.txt: blocks the whole site");
+    if (!robots.includes(`Sitemap: ${OFFICIAL_SITE_ORIGIN}/sitemap.xml`)) failures.push("robots.txt: references the wrong sitemap");
+  }
 }
 
 if (failures.length) {
@@ -108,4 +206,7 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`SEO audit passed: ${htmlFiles.length} HTML pages checked, sitemap.xml and robots.txt present.`);
+const sitemapCount = fs.existsSync(path.join(root, "sitemap.xml"))
+  ? [...fs.readFileSync(path.join(root, "sitemap.xml"), "utf8").matchAll(/<url>/g)].length
+  : 0;
+console.log(`SEO audit passed: ${htmlFiles.length} HTML pages checked, ${sitemapCount} sitemap URLs verified.`);

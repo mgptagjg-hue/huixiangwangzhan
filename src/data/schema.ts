@@ -1,13 +1,17 @@
 import { articles, type Article } from "./articles";
 import { dongfengDolicaModels } from "./dongfengDolicaModels";
 import type { NewsArticle } from "./news";
-import { CORE_FAQS, NAV_ITEMS, SERVICE_ITEMS, SITE } from "./site";
+import { CORE_FAQS, NAV_ITEMS, SERVICE_ITEMS, SITE, STORE_IMAGES } from "./site";
 
 const absoluteUrl = (path: string) => new URL(path, SITE.url).toString();
+const storeImageUrls = [
+  absoluteUrl(STORE_IMAGES.storeAndTrucks.src),
+  absoluteUrl(STORE_IMAGES.storefront.src)
+];
 
 const postalAddress = {
   "@type": "PostalAddress",
-  streetAddress: SITE.contact.address,
+  streetAddress: SITE.contact.streetAddress,
   addressLocality: "湖州市长兴县",
   addressRegion: "浙江省",
   addressCountry: "CN"
@@ -28,9 +32,10 @@ export function organizationSchema() {
     "@type": "Organization",
     name: SITE.name,
     legalName: SITE.name,
-    alternateName: SITE.shortName,
-    url: SITE.url,
+    alternateName: SITE.storeName,
+    url: absoluteUrl("/"),
     logo: absoluteUrl("/logo-huixiang.png"),
+    image: storeImageUrls,
     description: SITE.description,
     foundingDate: SITE.foundedDate,
     telephone: SITE.contact.phone,
@@ -46,10 +51,23 @@ export function autoDealerSchema() {
     "@context": "https://schema.org",
     "@type": "AutoDealer",
     name: SITE.name,
-    alternateName: SITE.shortName,
-    url: SITE.url,
+    alternateName: SITE.storeName,
+    url: absoluteUrl("/"),
     logo: absoluteUrl("/logo-huixiang.png"),
-    image: absoluteUrl("/images/vehicles/hero-3d-truck.png"),
+    image: storeImageUrls,
+    photo: [
+      {
+        "@type": "ImageObject",
+        contentUrl: storeImageUrls[0],
+        caption: "辉祥汽贸门店与现车实景，湖州长兴货车销售与商用车服务",
+        representativeOfPage: true
+      },
+      {
+        "@type": "ImageObject",
+        contentUrl: storeImageUrls[1],
+        caption: "辉祥汽贸真实门头，长兴辉祥汽车贸易有限公司实体经营门店"
+      }
+    ],
     description: SITE.description,
     telephone: SITE.contact.phone,
     address: postalAddress,

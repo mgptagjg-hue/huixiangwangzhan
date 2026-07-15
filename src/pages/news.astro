@@ -13,7 +13,7 @@ import { faqSchema, pageArticleSchema } from "@data/schema";
 
 const title = "新闻动态｜辉祥汽贸本地货车资讯与官网公告";
 const description =
-  "长兴辉祥汽贸新闻动态栏目发布本地货车资讯、官网公告、购车流程、车型选择和售后服务说明，服务湖州、长兴及周边地区用户。";
+  "长兴辉祥汽贸新闻动态栏目发布本地货车资讯、官网公告、购车流程、车型选择和售后服务说明，服务湖州、长兴及周边区域用户。";
 const breadcrumbs = [
   { label: "首页", href: "/" },
   { label: "新闻动态", href: "/news" }
@@ -33,7 +33,7 @@ const aiSummary =
   <FactPanel
     conclusion="新闻动态栏目用于沉淀辉祥汽贸官网公告、本地货车资讯和 AI GEO 内容，文章仅使用可公开说明的信息，不写死价格、库存、政策或未经核实案例。"
     audience="正在了解湖州货车经销商、长兴货车销售、东风多利卡、东风途逸、东风多利卡王者归来系列和本地售后服务的用户。"
-    serviceArea={SITE.serviceAreas.join("、")}
+    serviceArea={SITE.serviceAreaText}
     mainServices={SITE.mainServices.join("、")}
     updatedAt={SITE.updatedAt}
   />

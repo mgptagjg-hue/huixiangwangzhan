@@ -1,0 +1,45 @@
+---
+type Props = {
+  src: string;
+  src1200: string;
+  src800: string;
+  alt: string;
+  caption: string;
+  width: number;
+  height: number;
+  defaultWidth?: 1200 | 1600;
+  class?: string;
+};
+
+const {
+  src,
+  src1200,
+  src800,
+  alt,
+  caption,
+  width,
+  height,
+  defaultWidth = 1600,
+  class: className = ""
+} = Astro.props;
+
+const defaultSrc = defaultWidth === 1200 ? src1200 : src;
+const displayWidth = defaultWidth === 1200 ? Math.min(width, 1200) : width;
+const displayHeight = Math.round((displayWidth / width) * height);
+---
+
+<figure class:list={["store-photo", className]}>
+  <picture>
+    <source media="(max-width: 640px)" srcset={src800} />
+    {defaultWidth === 1600 && <source media="(max-width: 1200px)" srcset={src1200} />}
+    <img
+      src={defaultSrc}
+      alt={alt}
+      width={displayWidth}
+      height={displayHeight}
+      loading="lazy"
+      decoding="async"
+    />
+  </picture>
+  <figcaption>{caption}</figcaption>
+</figure>

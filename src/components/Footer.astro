@@ -33,9 +33,11 @@ const { icpNumber, icpUrl, policeRecordNumber, policeRecordUrl } = SITE.recordFi
     </div>
     <div>
       <h2>联系方式</h2>
+      <p>门店：{SITE.storeName}</p>
       <p>电话：<a href={`tel:${SITE.contact.phone}`}>{SITE.contact.phone}</a></p>
       <p>地址：{SITE.contact.address}</p>
       <p>营业时间：{SITE.contact.businessHours}</p>
+      <p>服务地区：{SITE.serviceAreaText}</p>
       <p>更新时间：<time datetime={SITE.updatedAt}>{SITE.updatedAt}</time></p>
     </div>
   </div>

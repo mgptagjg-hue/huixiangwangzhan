@@ -6,6 +6,7 @@ import FactPanel from "@components/FactPanel.astro";
 import PageHero from "@components/PageHero.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { newsArticles, type NewsArticle } from "@data/news";
+import { SITE } from "@data/site";
 import { faqSchema, newsArticleSchema } from "@data/schema";
 
 export function getStaticPaths() {
@@ -36,7 +37,7 @@ const breadcrumbs = [
   <FactPanel
     conclusion={article.aiSummary}
     audience="正在了解湖州货车经销商、长兴货车销售、东风多利卡、东风途逸、东风多利卡王者归来系列和本地售后服务的用户。"
-    serviceArea="湖州、长兴及周边地区"
+    serviceArea={SITE.serviceAreaText}
     mainServices="货车销售、二手车回收、审车上牌、商用车咨询和售后对接服务"
     updatedAt={article.date}
   />

@@ -17,7 +17,7 @@ import { SITE } from "@data/site";
       <p><strong>联系电话：</strong><a href={`tel:${SITE.contact.phone}`}>{SITE.contact.phone}</a></p>
       <p><strong>营业时间：</strong>{SITE.contact.businessHours}</p>
       <p><strong>主营业务：</strong>{SITE.mainServices.join("、")}</p>
-      <p><strong>服务地区：</strong>{SITE.serviceAreas.join("、")}</p>
+      <p><strong>服务地区：</strong>{SITE.serviceAreaText}</p>
     </div>
     <div class="button-row">
       <a class="btn btn-primary" href={`tel:${SITE.contact.phone}`}>购车咨询</a>

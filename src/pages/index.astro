@@ -1,5 +1,6 @@
 ---
 import ContactBand from "@components/ContactBand.astro";
+import StorePhoto from "@components/StorePhoto.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { dolicaConfigNotice } from "@data/dongfengDolicaModels";
 import { newsArticles } from "@data/news";
@@ -11,6 +12,7 @@ import {
   PROCESS_STEPS,
   SERVICE_ITEMS,
   SITE,
+  STORE_IMAGES,
   WHY_CHOOSE_ITEMS
 } from "@data/site";
 import { faqSchema } from "@data/schema";
@@ -22,7 +24,14 @@ const homeFaqs = CORE_FAQS.slice(0, 5);
 const latestNews = newsArticles.slice(0, 3);
 ---
 
-<BaseLayout title={title} description={description} canonicalPath="/" schemas={[faqSchema(homeFaqs)]}>
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath="/"
+  schemas={[faqSchema(homeFaqs)]}
+  ogImage={STORE_IMAGES.storeAndTrucks.src}
+  ogImageAlt="辉祥汽贸门店与现车实景"
+>
   <section class="home-hero">
     <img
       class="home-hero-image"
@@ -51,6 +60,7 @@ const latestNews = newsArticles.slice(0, 3);
   <section id="model-center" class="section model-section">
     <div class="container">
       <div class="section-heading-center">
+        <p class="eyeless-label">主营品牌</p>
         <h2 class="section-title">主营车型齐全，满足多样化运输需求</h2>
         <p class="section-lede">
           覆盖轻卡、小卡、厢式货车、新能源电车、工程车及城市配送车型，适合城配物流、工地运输、商超配送、个体经营等场景。
@@ -93,6 +103,42 @@ const latestNews = newsArticles.slice(0, 3);
       </div>
       <p class="image-notice">{IMAGE_NOTICE}</p>
       <p class="config-notice">{dolicaConfigNotice}</p>
+    </div>
+  </section>
+
+  <section class="section store-showcase-section">
+    <div class="container">
+      <div class="section-heading-center">
+        <p class="eyeless-label">真实经营场所</p>
+        <h2 class="section-title">实体门店与现车展示</h2>
+        <p class="section-lede">
+          辉祥汽贸在湖州长兴设有实体经营门店，为本地货车用户提供车型咨询、车辆销售、二手车回收与置换、审车上牌及相关用车服务。
+        </p>
+      </div>
+      <div class="store-showcase-grid">
+        <StorePhoto
+          src={STORE_IMAGES.storeAndTrucks.src}
+          src1200={STORE_IMAGES.storeAndTrucks.src1200}
+          src800={STORE_IMAGES.storeAndTrucks.src800}
+          alt={STORE_IMAGES.storeAndTrucks.alt}
+          caption={STORE_IMAGES.storeAndTrucks.caption}
+          width={STORE_IMAGES.storeAndTrucks.width}
+          height={STORE_IMAGES.storeAndTrucks.height}
+        />
+        <div class="store-showcase-copy content-flow">
+          <p>
+            长兴辉祥汽车贸易有限公司主要服务湖州、长兴及周边地区的货车用户。门店可咨询东风多利卡、东风多利卡王者归来系列、东风途逸、新能源货车以及其他实际经营车型，并提供二手车回收与置换、审车上牌、配件及货车维修等相关服务。
+          </p>
+          <p>
+            以下为辉祥汽贸实际经营门店和车辆展示照片。门店车型、车辆配置、颜色和库存会随实际销售情况变化，具体请以到店实车和电话咨询为准。
+          </p>
+          <div class="button-row">
+            <a class="btn btn-primary" href="/trucks">查看主营车型</a>
+            <a class="btn btn-outline" href="/contact">到店咨询</a>
+            <a class="btn btn-outline" href={`tel:${SITE.contact.phone}`}>电话咨询</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -375,6 +421,27 @@ const latestNews = newsArticles.slice(0, 3);
     background: #f4f7fa;
   }
 
+  .store-showcase-section {
+    background: #fff;
+  }
+
+  .store-showcase-grid {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.75fr);
+    gap: 30px;
+    align-items: center;
+  }
+
+  .store-showcase-copy p {
+    margin: 0;
+    color: var(--color-steel);
+  }
+
+  .store-showcase-copy .button-row {
+    margin-top: 26px;
+  }
+
   .service-panel {
     background: linear-gradient(135deg, #0b2341 0%, #132f52 100%);
     color: #fff;
@@ -614,6 +681,7 @@ const latestNews = newsArticles.slice(0, 3);
 
     .model-feature-row,
     .model-grid,
+    .store-showcase-grid,
     .faq-news-grid {
       grid-template-columns: 1fr;
     }

@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
+import { SITE_ORIGIN } from "./site-origin.mjs";
 
 export default defineConfig({
   output: "static",
@@ -11,5 +12,5 @@ export default defineConfig({
       applyBaseStyles: false
     })
   ],
-  site: "https://huixiang-auto.example"
+  site: SITE_ORIGIN
 });

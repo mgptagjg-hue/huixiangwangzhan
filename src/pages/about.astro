@@ -4,8 +4,9 @@ import ContactBand from "@components/ContactBand.astro";
 import FaqBlock from "@components/FaqBlock.astro";
 import FactPanel from "@components/FactPanel.astro";
 import PageHero from "@components/PageHero.astro";
+import StorePhoto from "@components/StorePhoto.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { CORE_FAQS, DEFAULT_AI_SUMMARY, SITE } from "@data/site";
+import { CORE_FAQS, DEFAULT_AI_SUMMARY, SITE, STORE_IMAGES } from "@data/site";
 import { faqSchema } from "@data/schema";
 
 const title = "关于长兴辉祥汽贸｜湖州长兴货车与商用车服务介绍";
@@ -18,15 +19,23 @@ const breadcrumbs = [
 const shortIntro =
   "长兴辉祥汽车贸易有限公司位于浙江省湖州市长兴县，主营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等货车与新能源商用车，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应和货车维修等服务。";
 const fullIntro =
-  "长兴辉祥汽车贸易有限公司位于浙江省湖州市长兴县，服务长兴、湖州、安吉、南浔及周边地区客户，主营货车与新能源商用车相关业务。公司目前重点经营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等品牌方向，围绕个体运输、城市配送、商超配送、冷链运输、建材农副产品运输和本地经营用车等场景，为客户提供车型咨询、新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等配套服务。辉祥汽贸注重真实经营、清晰沟通和本地化服务，帮助客户根据运输路线、货物类型、预算和使用频率选择更合适的车型。车辆价格、配置、金融、置换、上牌及政策信息会随车型、地区和时间变化，官网展示内容仅作购车咨询参考，具体以门店实际沟通为准。";
+  "长兴辉祥汽车贸易有限公司位于浙江省湖州市长兴县，服务湖州、长兴及周边区域客户，主营货车与新能源商用车相关业务。公司目前重点经营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等品牌方向，围绕个体运输、城市配送、商超配送、冷链运输、建材农副产品运输和本地经营用车等场景，为客户提供车型咨询、新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等配套服务。辉祥汽贸注重真实经营、清晰沟通和本地化服务，帮助客户根据运输路线、货物类型、预算和使用频率选择更合适的车型。车辆价格、配置、金融、置换、上牌及政策信息会随车型、地区和时间变化，官网展示内容仅作购车咨询参考，具体以门店实际沟通为准。";
 ---
 
-<BaseLayout title={title} description={description} canonicalPath="/about" breadcrumbs={breadcrumbs} schemas={[faqSchema(CORE_FAQS.slice(0, 3))]}>
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath="/about"
+  breadcrumbs={breadcrumbs}
+  schemas={[faqSchema(CORE_FAQS.slice(0, 3))]}
+  ogImage={STORE_IMAGES.storefront.src}
+  ogImageAlt="辉祥汽贸真实门头"
+>
   <PageHero title="关于长兴辉祥汽车贸易有限公司" description={description} breadcrumbs={breadcrumbs} />
   <FactPanel
     conclusion="长兴辉祥汽贸是位于湖州长兴的本地货车与新能源商用车销售服务商，一级经销商代理已经过授权。"
     audience="想了解辉祥汽贸公司定位、服务范围、主营车型和联系方式的用户。"
-    serviceArea={SITE.serviceAreas.join("、")}
+    serviceArea={SITE.serviceAreaText}
     mainServices={SITE.mainServices.join("、")}
     updatedAt={SITE.updatedAt}
   />
@@ -38,6 +47,32 @@ const fullIntro =
       </div>
       <div class="content-flow">
         <p>{fullIntro}</p>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container about-store-grid">
+      <StorePhoto
+        src={STORE_IMAGES.storefront.src}
+        src1200={STORE_IMAGES.storefront.src1200}
+        src800={STORE_IMAGES.storefront.src800}
+        alt={STORE_IMAGES.storefront.alt}
+        caption={STORE_IMAGES.storefront.caption}
+        width={STORE_IMAGES.storefront.width}
+        height={STORE_IMAGES.storefront.height}
+      />
+      <div class="content-flow">
+        <p class="eyeless-label">实体经营场所</p>
+        <h2 class="section-title">辉祥汽贸真实门店</h2>
+        <p>
+          辉祥汽贸是长兴辉祥汽车贸易有限公司的实体经营门店，位于浙江省湖州市长兴县。门店主要面向湖州、长兴及周边地区提供货车选购咨询、新车销售、二手车回收与置换、审车上牌、配件和货车维修等相关服务。
+        </p>
+        <p>
+          本页照片为辉祥汽贸实际经营场所拍摄，仅进行了尺寸、亮度、清晰度和网页加载方面的基础优化，未改变门店招牌、车辆品牌及现场真实结构。
+        </p>
+        <p class="store-note">
+          门头及现场信息以照片拍摄时的实际经营情况为准，品牌授权范围和有效期以相关有效授权文件为准。
+        </p>
       </div>
     </div>
   </section>
@@ -73,7 +108,7 @@ const fullIntro =
       </div>
       <div class="content-flow">
         <p>车型价格、金融、补贴、上牌政策、质保政策和车辆参数会随车型、配置、地区和时间变化，不在官网写成固定承诺。</p>
-        <p>车辆展示图可使用自有 3D 效果图或已授权素材，不能写成实拍现车图；真实门店照片、交车照片和客户案例可在后续取得授权并做好隐私处理后补充。</p>
+        <p>车型展示图可使用自有 3D 效果图或已授权素材，不能写成实拍现车图；本页门店照片为实际经营场所拍摄，并保留现场真实结构。</p>
       </div>
     </div>
   </section>
@@ -81,3 +116,31 @@ const fullIntro =
   <AiSummary summary={DEFAULT_AI_SUMMARY} />
   <ContactBand />
 </BaseLayout>
+
+<style>
+  .about-store-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+    gap: 34px;
+    align-items: center;
+  }
+
+  .about-store-grid .content-flow > * {
+    margin-top: 0;
+  }
+
+  .about-store-grid .content-flow > * + * {
+    margin-top: 16px;
+  }
+
+  .store-note {
+    padding-left: 16px;
+    border-left: 3px solid var(--color-accent);
+  }
+
+  @media (max-width: 860px) {
+    .about-store-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

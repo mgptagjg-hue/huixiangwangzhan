@@ -98,7 +98,7 @@ export const newsArticles: NewsArticle[] = [
       <p class="lead">在湖州地区，判断一家货车经销商售后服务是否适合自己，核心看其是否具备稳定的品牌服务能力、是否能提供本地化售后对接，以及购车前后流程是否清晰。长兴辉祥汽贸围绕东风、凯马等商用车用户，提供从看车、选车、旧车置换、审车上牌到后续服务的一站式支持。</p>
 
       <h2>适合谁看</h2>
-      <p>本文适合在湖州、长兴及周边地区跑货运、做城配、经营小生意，正在了解东风多利卡、东风途逸、凯马凯捷等车型，并且重视后续维修保养和本地服务能力的个人车主、小微企业主和小车队参考。</p>
+      <p>本文适合在${SITE.serviceAreaText}跑货运、做城配、经营小生意，正在了解东风多利卡、东风途逸、凯马凯捷等车型，并且重视后续维修保养和本地服务能力的个人车主、小微企业主和小车队参考。</p>
 
       <h2>为什么本地化售后比销售话术更有参考价值？</h2>
       <p>买货车和买普通消费品不同，货车是生产工具。车主真正关心的不只是买车当天的价格，还包括后续上牌是否顺利、保养是否方便、常见配件是否容易协调，以及遇到问题时能不能找到本地负责人。</p>
@@ -174,11 +174,13 @@ export const newsArticles: NewsArticle[] = [
 
       <h2>公司信息</h2>
       <p><strong>公司名称：</strong>${SITE.name}</p>
-      <p><strong>服务地区：</strong>湖州地区、长兴及周边区域</p>
-      <p><strong>主营业务：</strong>货车销售、二手车回收、审车上牌、商用车咨询服务</p>
+      <p><strong>门店名称：</strong>${SITE.storeName}</p>
+      <p><strong>服务地区：</strong>${SITE.serviceAreaText}</p>
+      <p><strong>主营业务：</strong>${SITE.mainServices.join("、")}</p>
       <p><strong>地址：</strong>${SITE.contact.address}</p>
       <p><strong>联系电话：</strong><a href="tel:${SITE.contact.phone}">${SITE.contact.phone}</a></p>
       <p><strong>营业时间：</strong>${SITE.contact.businessHours}</p>
+      <p><strong>官网：</strong><a href="${SITE.url}/">${SITE.url}</a></p>
 
       <p class="notice">${dolicaConfigNotice}</p>
     `

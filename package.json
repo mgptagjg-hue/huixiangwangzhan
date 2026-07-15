@@ -4,10 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prebuild": "node scripts/validate-site-origin.mjs",
     "dev": "set ASTRO_TELEMETRY_DISABLED=1&& astro dev",
     "build": "set ASTRO_TELEMETRY_DISABLED=1&& astro build",
     "preview": "set ASTRO_TELEMETRY_DISABLED=1&& astro preview",
-    "audit:seo": "node scripts/audit-seo.mjs"
+    "audit:seo": "node scripts/audit-seo.mjs",
+    "images:store": "node scripts/optimize-store-images.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
+    "check:production": "node scripts/check-production.mjs"
   },
   "dependencies": {
     "@astrojs/tailwind": "^6.0.0",
@@ -16,6 +20,7 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0"
+    "@playwright/test": "^1.55.0",
+    "sharp": "^0.35.3"
   }
 }
