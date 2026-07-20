@@ -23,8 +23,8 @@ export const SITE = {
   recordFiling: {
     icpNumber: publicValue(publicEnv.PUBLIC_ICP_NUMBER, "浙ICP备2026052872号-1"),
     icpUrl: publicValue(publicEnv.PUBLIC_ICP_URL, "https://beian.miit.gov.cn/"),
-    policeRecordNumber: publicValue(publicEnv.PUBLIC_POLICE_RECORD_NUMBER),
-    policeRecordUrl: publicValue(publicEnv.PUBLIC_POLICE_RECORD_URL)
+    policeRecordNumber: "浙公网安备33052202000930号",
+    policeRecordUrl: "https://beian.mps.gov.cn/#/query/webSearch?code=33052202000930"
   },
   foundedDate: "2016-09-07",
   serviceAreaText: "湖州、长兴及周边区域",

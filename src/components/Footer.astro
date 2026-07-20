@@ -44,12 +44,14 @@ const { icpNumber, icpUrl, policeRecordNumber, policeRecordUrl } = SITE.recordFi
   <div class="container footer-bottom">
     <div class="footer-legal">
       <span>© 2026 {SITE.name}. 保留所有权利。</span>
-      {icpNumber && (
-        <a href={icpUrl} target="_blank" rel="noopener noreferrer">{icpNumber}</a>
-      )}
-      {policeRecordNumber && policeRecordUrl && (
-        <a href={policeRecordUrl} target="_blank" rel="noopener noreferrer">{policeRecordNumber}</a>
-      )}
+      <div class="filing-links">
+        {icpNumber && (
+          <a href={icpUrl} target="_blank" rel="noopener noreferrer">{icpNumber}</a>
+        )}
+        {policeRecordNumber && policeRecordUrl && (
+          <a href={policeRecordUrl} rel="noreferrer" target="_blank">{policeRecordNumber}</a>
+        )}
+      </div>
     </div>
     <span>车型、价格、金融政策、上牌政策及库存情况以到店咨询和厂家公告为准。</span>
   </div>
@@ -112,18 +114,27 @@ const { icpNumber, icpUrl, policeRecordNumber, policeRecordUrl } = SITE.recordFi
     margin-top: 34px;
     padding-top: 18px;
     border-top: 1px solid rgba(255, 255, 255, 0.12);
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    justify-items: center;
     gap: 18px;
+    text-align: center;
     color: rgba(255, 255, 255, 0.58);
     font-size: 0.86rem;
   }
 
   .footer-legal {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px 16px;
+    flex-direction: column;
+    gap: 10px;
     align-items: center;
+  }
+
+  .filing-links {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    max-width: 100%;
+    text-align: center;
   }
 
   .footer-legal a {
@@ -147,13 +158,12 @@ const { icpNumber, icpUrl, policeRecordNumber, policeRecordUrl } = SITE.recordFi
       grid-template-columns: 1fr;
     }
 
-    .footer-bottom {
-      flex-direction: column;
+    .footer-legal {
+      width: 100%;
     }
 
-    .footer-legal {
-      flex-direction: column;
-      align-items: flex-start;
+    .filing-links a {
+      overflow-wrap: anywhere;
     }
   }
 </style>
