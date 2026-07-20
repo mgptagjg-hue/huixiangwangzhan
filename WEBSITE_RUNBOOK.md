@@ -1,6 +1,6 @@
 # 长兴辉祥汽贸官网运行手册
 
-更新时间：2026-07-02
+更新时间：2026-07-20
 
 ## 1. 如何启动网站
 
@@ -97,3 +97,45 @@ npm run audit:seo
 - 湖州买4米2货车要注意什么？
 - 湖州东风货车报价怎么看？
 - 长兴辉祥汽贸的一级经销商代理是否已经过授权？
+
+## 7. IndexNow 使用说明
+
+IndexNow 用于在官网页面真实新增、修改或删除后，主动通知支持 IndexNow 的搜索引擎。它不是排名保证，不能替代 sitemap、百度资源提交或正常内容运营。
+
+### 第一次接入
+
+先部署最新 `dist/`，并确认下面的 Key 地址能直接打开，正文只有 Key 本身：
+
+`https://huixiangqimao.cn/24d0c9a09cbb007078ec63115c965aadfd8b5c3d3e8d8fae6cebddd152d7ad7e.txt`
+
+然后运行：
+
+```bash
+npm run build
+npm run check:indexnow
+npm run indexnow -- --file scripts/indexnow-urls.json
+```
+
+### 发布新文章后
+
+例如发布 `https://huixiangqimao.cn/news/example` 后运行：
+
+```bash
+npm run indexnow -- https://huixiangqimao.cn/news/example
+```
+
+### 修改车型页面后
+
+车型中心的实际地址是 `/trucks`：
+
+```bash
+npm run indexnow -- https://huixiangqimao.cn/trucks
+```
+
+### 删除页面后
+
+先确认旧 URL 已正确返回 404 或 410，再将该旧 URL 传给同一命令，通知搜索引擎页面状态发生变化。
+
+只在页面真实变化时提交，不要每天重复提交没有变化的 URL。如需先检查而不发送请求，可添加 `--dry-run`。
+
+正式提交前，脚本会自动检查公网 Key 文件必须与 Key 完全一致，并确认页面直接返回 200、没有重定向、没有 `noindex` 且 canonical 与提交 URL 一致。检查失败时不会发送 IndexNow 请求，应先修复服务器部署或 URL 规则。

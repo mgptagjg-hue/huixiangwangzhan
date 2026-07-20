@@ -10,7 +10,10 @@ const scanTargets = [
   "src/layouts/BaseLayout.astro",
   "src/pages/sitemap.xml.ts",
   "src/pages/robots.txt.ts",
-  "scripts/indexnow.mjs"
+  "scripts/indexnow-utils.mjs",
+  "scripts/submit-indexnow.mjs",
+  "scripts/check-indexnow.mjs",
+  "scripts/indexnow-urls.json"
 ];
 const forbiddenPatterns = [
   { label: "example domain", pattern: /huixiang-auto\.example/i },

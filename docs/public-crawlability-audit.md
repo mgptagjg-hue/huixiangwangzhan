@@ -44,7 +44,8 @@ https://huixiangqimao.cn
 - `src/data/schema.ts` 间接生成 Organization、AutoDealer、Article 等 JSON-LD
 - `src/pages/sitemap.xml.ts`
 - `src/pages/robots.txt.ts`
-- `scripts/indexnow.mjs`
+- `scripts/submit-indexnow.mjs`
+- `scripts/check-indexnow.mjs`
 
 ## Sitemap
 

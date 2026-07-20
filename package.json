@@ -10,7 +10,8 @@
     "preview": "set ASTRO_TELEMETRY_DISABLED=1&& astro preview",
     "audit:seo": "node scripts/audit-seo.mjs",
     "images:store": "node scripts/optimize-store-images.mjs",
-    "indexnow": "node scripts/indexnow.mjs",
+    "indexnow": "node scripts/submit-indexnow.mjs",
+    "check:indexnow": "node scripts/check-indexnow.mjs",
     "check:production": "node scripts/check-production.mjs"
   },
   "dependencies": {

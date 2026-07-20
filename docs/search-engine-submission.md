@@ -89,44 +89,50 @@ IndexNow Key 文件：
 
 - 源码位置：`public/24d0c9a09cbb007078ec63115c965aadfd8b5c3d3e8d8fae6cebddd152d7ad7e.txt`
 - 线上访问地址：`https://huixiangqimao.cn/24d0c9a09cbb007078ec63115c965aadfd8b5c3d3e8d8fae6cebddd152d7ad7e.txt`
-- 文件内容：仅包含该 IndexNow Key。
+- 文件内容：仅包含该 IndexNow Key，不带 BOM、空行或尾部换行。
 
 提交脚本：
 
-- 脚本位置：`scripts/indexnow.mjs`
+- 脚本位置：`scripts/submit-indexnow.mjs`
+- 本地检查：`scripts/check-indexnow.mjs`
+- 首次提交清单：`scripts/indexnow-urls.json`
 - npm 命令：`npm run indexnow`
-- 默认 dry-run，不会自动提交。
 
-单 URL dry-run：
+部署后先运行本地检查：
+
+```bash
+npm run build
+npm run check:indexnow
+```
+
+第一次接入：确认线上 Key 文件能够直接访问且正文与 Key 完全一致后，运行：
+
+```bash
+npm run indexnow -- --file scripts/indexnow-urls.json
+```
+
+发布或真实修改新闻后，只提交发生变化的 URL：
 
 ```bash
 npm run indexnow -- https://huixiangqimao.cn/news/huzhou-truck-after-sales-service
 ```
 
-单 URL 正式提交：
+修改车型中心后：
 
 ```bash
-npm run indexnow -- --submit https://huixiangqimao.cn/news/huzhou-truck-after-sales-service
-```
-
-批量 URL dry-run：
-
-```bash
-npm run indexnow -- --file docs/indexnow-urls.txt
-```
-
-批量 URL 正式提交：
-
-```bash
-npm run indexnow -- --submit --file docs/indexnow-urls.txt
+npm run indexnow -- https://huixiangqimao.cn/trucks
 ```
 
 注意：
 
 - 仅提交 `https://huixiangqimao.cn` 下的正式 URL。
-- 新增、更新、删除页面都可以用同一脚本通知 IndexNow。
+- `npm run indexnow` 会正式发送请求；如只想校验，可额外使用 `--dry-run`。
 - 删除页面应先确保线上返回 404 或 410，再提交对应正式 URL。
 - 不要提交测试页、预览页、localhost、IP 地址、后台页、登录页或参数重复页。
+- IndexNow 不是排名保证，不能替代 sitemap、百度资源提交或正常内容运营。
+- 只有真实新增、修改或删除页面时才提交，不要每天重复提交未变化页面。
+- 提交脚本会先检查公网 Key 正文、URL 状态、重定向、`noindex` 和 canonical；任一项不符合就会以非 0 状态退出，不会调用 IndexNow API。
+- 当前服务器若把无尾斜杠 canonical URL 301 到尾斜杠版本，应先统一 Nginx 与 canonical URL 规则，再进行首次提交。
 
 ## 部署后人工复测清单
 
@@ -141,4 +147,4 @@ npm run indexnow -- --submit --file docs/indexnow-urls.txt
 9. 上传百度或 Bing 真实验证文件后，确认文件可从公网访问。
 10. IndexNow key 文件部署后，确认 key URL 可从公网访问。
 11. 在百度搜索资源平台和 Bing Webmaster Tools 中人工提交 sitemap。
-12. 仅在确认线上 key 文件可访问后，再运行 IndexNow `--submit`。
+12. 仅在确认线上 Key 文件内容与文件名完全一致后，再运行 `npm run indexnow` 正式提交。
