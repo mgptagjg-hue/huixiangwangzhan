@@ -113,23 +113,24 @@ IndexNow 用于在官网页面真实新增、修改或删除后，主动通知�
 ```bash
 npm run build
 npm run check:indexnow
+npm run check:production
 npm run indexnow -- --file scripts/indexnow-urls.json
 ```
 
 ### 发布新文章后
 
-例如发布 `https://huixiangqimao.cn/news/example` 后运行：
+例如发布 `https://huixiangqimao.cn/news/example/` 后运行：
 
 ```bash
-npm run indexnow -- https://huixiangqimao.cn/news/example
+npm run indexnow -- https://huixiangqimao.cn/news/example/
 ```
 
 ### 修改车型页面后
 
-车型中心的实际地址是 `/trucks`：
+车型中心的 canonical 地址是 `/trucks/`：
 
 ```bash
-npm run indexnow -- https://huixiangqimao.cn/trucks
+npm run indexnow -- https://huixiangqimao.cn/trucks/
 ```
 
 ### 删除页面后

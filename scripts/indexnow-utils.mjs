@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { SITE_ORIGIN, canonicalPageUrl } from "../site-origin.mjs";
 
-export const SITE_ORIGIN = "https://huixiangqimao.cn";
+export { SITE_ORIGIN };
 export const SITE_HOST = "huixiangqimao.cn";
 export const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";
 export const PROJECT_ROOT = path.resolve(fileURLToPath(new URL("../", import.meta.url)));
@@ -68,15 +69,11 @@ export function normalizeOfficialUrl(input) {
     throw new Error(`不允许提交带查询参数或锚点的重复 URL：${input}`);
   }
 
-  if (url.pathname !== "/") {
-    url.pathname = url.pathname.replace(/\/+$/, "");
-  }
-
-  if (/^\/404(?:\.html)?$/i.test(url.pathname)) {
+  if (/^\/404(?:\.html)?\/?$/i.test(url.pathname)) {
     throw new Error(`不允许提交网站的 404 页面：${input}`);
   }
 
-  return url.toString();
+  return canonicalPageUrl(url.toString());
 }
 
 export function builtHtmlPathForUrl(input) {

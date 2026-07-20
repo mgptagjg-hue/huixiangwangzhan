@@ -4,6 +4,9 @@ import path from "node:path";
 import { OFFICIAL_SITE_ORIGIN } from "../site-origin.mjs";
 
 const COMPANY_NAME = "长兴辉祥汽车贸易有限公司";
+const STORE_NAME = "辉祥汽贸";
+const PHONE = "15268286681";
+const ADDRESS = "浙江省湖州市长兴县雉州大道皇冠大酒店往西500米辉祥汽贸";
 const USER_AGENTS = ["Mozilla/5.0", "Baiduspider", "bingbot", "Googlebot", "OAI-SearchBot"];
 const REQUEST_TIMEOUT_MS = 20_000;
 const failures = [];
@@ -18,23 +21,25 @@ function pass(message) {
 }
 
 async function request(url, userAgent = "Mozilla/5.0") {
-  const startedAt = Date.now();
-  try {
-    const response = await fetch(url, {
-      headers: { "User-Agent": userAgent, Accept: "text/html,application/xml,text/plain;q=0.9,*/*;q=0.8" },
-      redirect: "follow",
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
-    });
-    const body = await response.text();
-    return {
-      ok: true,
-      response,
-      body,
-      elapsedMs: Date.now() - startedAt,
-      contentType: response.headers.get("content-type") || ""
-    };
-  } catch (error) {
-    return { ok: false, error, elapsedMs: Date.now() - startedAt };
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const startedAt = Date.now();
+    try {
+      const response = await fetch(url, {
+        headers: { "User-Agent": userAgent, Accept: "text/html,application/xml,text/plain;q=0.9,*/*;q=0.8" },
+        redirect: "follow",
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
+      });
+      const body = await response.text();
+      return {
+        ok: true,
+        response,
+        body,
+        elapsedMs: Date.now() - startedAt,
+        contentType: response.headers.get("content-type") || ""
+      };
+    } catch (error) {
+      if (attempt === 2) return { ok: false, error, elapsedMs: Date.now() - startedAt };
+    }
   }
 }
 
@@ -83,6 +88,7 @@ async function checkTextResources() {
     if (robots.response.status !== 200) fail(`robots.txt returned ${robots.response.status}.`);
     if (!robots.contentType.toLowerCase().includes("text/plain")) fail(`robots.txt Content-Type is ${robots.contentType}.`);
     if (!robots.body.includes("User-agent: *") || !robots.body.includes("Allow: /")) fail("robots.txt does not allow public crawling.");
+    if (!robots.body.includes("User-agent: OAI-SearchBot")) fail("robots.txt does not explicitly allow OAI-SearchBot.");
     if (!robots.body.includes(`Sitemap: ${OFFICIAL_SITE_ORIGIN}/sitemap.xml`)) fail("robots.txt references the wrong sitemap.");
     if (/Disallow:\s*\/$/im.test(robots.body)) fail("robots.txt blocks the entire site.");
     if (!failures.some((item) => item.startsWith("robots.txt"))) pass("robots.txt is readable and allows crawling.");
@@ -99,6 +105,9 @@ async function checkTextResources() {
   if (!/^<\?xml[\s\S]*<urlset\b/.test(sitemap.body.trim())) fail("sitemap.xml is not a sitemap XML document.");
   const urls = sitemapUrls(sitemap.body);
   if (!urls.length) fail("sitemap.xml contains no URLs.");
+  if (!urls.includes(`${OFFICIAL_SITE_ORIGIN}/news/official-website-launch-announcement/`)) {
+    fail("sitemap.xml does not include the official website launch announcement.");
+  }
   if (urls.some((url) => !url.startsWith(`${OFFICIAL_SITE_ORIGIN}/`) && url !== OFFICIAL_SITE_ORIGIN)) {
     fail("sitemap.xml contains a URL outside the canonical origin.");
   }
@@ -119,12 +128,29 @@ async function checkSitemapPages(urls) {
         continue;
       }
       if (result.response.status !== 200) fail(`${url}: returned ${result.response.status}.`);
+      if (result.response.url !== url) fail(`${url}: redirects to ${result.response.url}.`);
       if (!result.contentType.toLowerCase().includes("text/html")) fail(`${url}: Content-Type is ${result.contentType}.`);
+      if (result.body.length < 1_000) fail(`${url}: HTML body is unexpectedly short.`);
       if (/<meta\s+[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(result.body)) fail(`${url}: contains noindex.`);
+      if ((result.body.match(/<h1[\s>]/gi) ?? []).length !== 1) fail(`${url}: does not contain exactly one H1.`);
+      if (!/<title>[\s\S]+<\/title>/i.test(result.body)) fail(`${url}: is missing a title.`);
+      if (!/<meta\s+name=["']description["']\s+content=["'][^"']+["']/i.test(result.body)) fail(`${url}: is missing a meta description.`);
       const canonical = canonicalFromHtml(result.body);
       if (canonical !== url) fail(`${url}: canonical is ${canonical || "missing"}.`);
       if (/huixiang-auto\.example|https?:\/\/(localhost|127\.0\.0\.1)/i.test(result.body)) fail(`${url}: contains a test origin.`);
       if (!result.body.includes(COMPANY_NAME)) fail(`${url}: HTML does not contain the company name.`);
+      if (!result.body.includes(STORE_NAME)) fail(`${url}: HTML does not contain the store name.`);
+      if (!result.body.includes(PHONE)) fail(`${url}: HTML does not contain the phone number.`);
+      if (!result.body.includes(ADDRESS)) fail(`${url}: HTML does not contain the store address.`);
+      const jsonLdBlocks = [...result.body.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)];
+      if (!jsonLdBlocks.length) fail(`${url}: is missing JSON-LD.`);
+      for (const block of jsonLdBlocks) {
+        try {
+          JSON.parse(block[1]);
+        } catch (error) {
+          fail(`${url}: contains invalid JSON-LD (${error.message}).`);
+        }
+      }
     }
   }
 

@@ -2,8 +2,12 @@ import { articles, type Article } from "./articles";
 import { dongfengDolicaModels } from "./dongfengDolicaModels";
 import type { NewsArticle } from "./news";
 import { CORE_FAQS, NAV_ITEMS, SERVICE_ITEMS, SITE, STORE_IMAGES } from "./site";
+import { canonicalPageUrl } from "../../site-origin.mjs";
 
 const absoluteUrl = (path: string) => new URL(path, SITE.url).toString();
+const pageUrl = (path: string) => canonicalPageUrl(path);
+const businessId = absoluteUrl("/#business");
+const websiteId = absoluteUrl("/#website");
 const storeImageUrls = [
   absoluteUrl(STORE_IMAGES.storeAndTrucks.src),
   absoluteUrl(STORE_IMAGES.storefront.src)
@@ -29,32 +33,36 @@ const openingHoursSpecification = [
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": ["Organization", "AutoDealer", "LocalBusiness"],
+    "@id": businessId,
     name: SITE.name,
     legalName: SITE.name,
     alternateName: SITE.storeName,
-    url: absoluteUrl("/"),
+    url: pageUrl("/"),
     logo: absoluteUrl("/logo-huixiang.png"),
     image: storeImageUrls,
     description: SITE.description,
     foundingDate: SITE.foundedDate,
     telephone: SITE.contact.phone,
     address: postalAddress,
+    openingHours: "Mo-Su 08:00-17:00",
+    openingHoursSpecification,
     areaServed: SITE.serviceAreas,
+    brand: SITE.mainBrands,
+    serviceType: SITE.mainServices,
     knowsAbout: [...SITE.mainBrands, ...SITE.mainVehicleTypes, ...SITE.mainServices],
-    sameAs: [SITE.contact.mapUrl]
-  };
-}
-
-export function autoDealerSchema() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "AutoDealer",
-    name: SITE.name,
-    alternateName: SITE.storeName,
-    url: absoluteUrl("/"),
-    logo: absoluteUrl("/logo-huixiang.png"),
-    image: storeImageUrls,
+    identifier: [
+      {
+        "@type": "PropertyValue",
+        propertyID: "ICP备案号",
+        value: SITE.recordFiling.icpNumber
+      },
+      {
+        "@type": "PropertyValue",
+        propertyID: "公安备案号",
+        value: SITE.recordFiling.policeRecordNumber
+      }
+    ],
     photo: [
       {
         "@type": "ImageObject",
@@ -68,14 +76,6 @@ export function autoDealerSchema() {
         caption: "辉祥汽贸真实门头，长兴辉祥汽车贸易有限公司实体经营门店"
       }
     ],
-    description: SITE.description,
-    telephone: SITE.contact.phone,
-    address: postalAddress,
-    openingHours: "Mo-Su 08:00-17:00",
-    openingHoursSpecification,
-    areaServed: SITE.serviceAreas,
-    brand: SITE.mainBrands,
-    serviceType: SITE.mainServices,
     makesOffer: SERVICE_ITEMS.map((service) => ({
       "@type": "Offer",
       itemOffered: {
@@ -84,7 +84,8 @@ export function autoDealerSchema() {
         description: service.note
       },
       availability: "https://schema.org/InStoreOnly"
-    }))
+    })),
+    sameAs: [SITE.contact.mapUrl]
   };
 }
 
@@ -92,19 +93,13 @@ export function websiteSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": websiteId,
     name: `${SITE.name}官网`,
-    url: SITE.url,
+    url: pageUrl("/"),
     description: SITE.description,
     inLanguage: "zh-CN",
     publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      logo: absoluteUrl("/logo-huixiang.png")
-    },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${SITE.url}/guides?query={search_term_string}`,
-      "query-input": "required name=search_term_string"
+      "@id": businessId
     }
   };
 }
@@ -117,7 +112,7 @@ export function breadcrumbSchema(items: { label: string; href: string }[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.label,
-      item: absoluteUrl(item.href)
+      item: pageUrl(item.href)
     }))
   };
 }
@@ -146,15 +141,13 @@ export function articleSchema(article: Article) {
     datePublished: article.updatedAt,
     dateModified: article.updatedAt,
     author: {
-      "@type": "Organization",
+      "@id": businessId,
       name: article.author
     },
     publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      logo: absoluteUrl("/logo-huixiang.png")
+      "@id": businessId
     },
-    mainEntityOfPage: absoluteUrl(`/guides/${article.slug}`),
+    mainEntityOfPage: pageUrl(`/guides/${article.slug}`),
     inLanguage: "zh-CN"
   };
 }
@@ -167,19 +160,17 @@ export function newsArticleSchema(article: NewsArticle) {
     description: article.seoDescription,
     keywords: article.keywords.join(", "),
     datePublished: article.date,
-    dateModified: article.date,
+    dateModified: article.updatedAt,
     articleSection: article.category,
     author: {
-      "@type": "Organization",
+      "@id": businessId,
       name: article.author
     },
     publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      logo: absoluteUrl("/logo-huixiang.png")
+      "@id": businessId
     },
     image: article.cover ? absoluteUrl(article.cover) : absoluteUrl("/images/vehicles/hero-3d-truck.png"),
-    mainEntityOfPage: absoluteUrl(`/news/${article.slug}`),
+    mainEntityOfPage: pageUrl(`/news/${article.slug}`),
     inLanguage: "zh-CN"
   };
 }
@@ -198,15 +189,12 @@ export function pageArticleSchema(page: {
     datePublished: page.updatedAt ?? SITE.updatedAt,
     dateModified: page.updatedAt ?? SITE.updatedAt,
     author: {
-      "@type": "Organization",
-      name: SITE.name
+      "@id": businessId
     },
     publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      logo: absoluteUrl("/logo-huixiang.png")
+      "@id": businessId
     },
-    mainEntityOfPage: absoluteUrl(page.path),
+    mainEntityOfPage: pageUrl(page.path),
     inLanguage: "zh-CN"
   };
 }
@@ -218,7 +206,7 @@ export function itemListSchema() {
     itemListElement: articles.map((article, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: absoluteUrl(`/guides/${article.slug}`),
+      url: pageUrl(`/guides/${article.slug}`),
       name: article.title
     }))
   };
@@ -234,7 +222,7 @@ export function dolicaModelItemListSchema() {
     itemListElement: dongfengDolicaModels.map((model, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: absoluteUrl(`/trucks#${model.id}`),
+      url: pageUrl(`/trucks#${model.id}`),
       item: {
         "@type": "Product",
         name: model.name,
@@ -264,7 +252,7 @@ export function siteNavigationSchema() {
       "@type": "ListItem",
       position: index + 1,
       name: item.label,
-      url: absoluteUrl(item.href)
+      url: pageUrl(item.href)
     }))
   };
 }

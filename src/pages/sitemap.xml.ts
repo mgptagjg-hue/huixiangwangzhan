@@ -1,7 +1,8 @@
 import type { APIRoute } from "astro";
 import { articles } from "@data/articles";
 import { newsArticles } from "@data/news";
-import { MAIN_ROUTES, SITE } from "@data/site";
+import { MAIN_ROUTES } from "@data/site";
+import { canonicalPageUrl } from "../../site-origin.mjs";
 
 const articleRoutes = articles.map((article) => ({
   path: `/guides/${article.slug}`,
@@ -14,7 +15,7 @@ const newsRoutes = newsArticles.map((article) => ({
   path: `/news/${article.slug}`,
   priority: "0.8",
   changefreq: "monthly",
-  lastmod: article.date
+  lastmod: article.updatedAt
 }));
 
 const allRoutes = [
@@ -26,7 +27,7 @@ const allRoutes = [
 export const GET: APIRoute = () => {
   const urls = allRoutes
     .map((route) => {
-      const loc = new URL(route.path, SITE.url).toString();
+      const loc = canonicalPageUrl(route.path);
       return `  <url>
     <loc>${loc}</loc>
     <lastmod>${route.lastmod}</lastmod>

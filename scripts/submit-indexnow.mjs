@@ -19,7 +19,7 @@ const STATUS_MESSAGES = {
 function printUsage() {
   console.log(`用法：
   npm run indexnow -- https://huixiangqimao.cn/
-  npm run indexnow -- https://huixiangqimao.cn/news/example https://huixiangqimao.cn/trucks
+  npm run indexnow -- https://huixiangqimao.cn/news/example/ https://huixiangqimao.cn/trucks/
   npm run indexnow -- --file scripts/indexnow-urls.json
 
 可选：

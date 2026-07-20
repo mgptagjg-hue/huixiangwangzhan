@@ -6,6 +6,9 @@ export const GET: APIRoute = () => {
     `User-agent: *
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
 Sitemap: ${new URL("/sitemap.xml", SITE.url).toString()}
 `,
     {

@@ -4,6 +4,10 @@ import { OFFICIAL_SITE_ORIGIN, SITE_ORIGIN } from "../site-origin.mjs";
 
 const root = path.resolve("dist");
 const companyName = "长兴辉祥汽车贸易有限公司";
+const storeName = "辉祥汽贸";
+const phone = "15268286681";
+const address = "浙江省湖州市长兴县雉州大道皇冠大酒店往西500米辉祥汽贸";
+const businessId = `${OFFICIAL_SITE_ORIGIN}/#business`;
 const banned = [
   "最好",
   "第一",
@@ -65,7 +69,7 @@ function canonicalMatches(html) {
 function builtPathToUrl(relativePath) {
   if (relativePath === "index.html") return `${OFFICIAL_SITE_ORIGIN}/`;
   const route = relativePath.replace(/\/index\.html$/, "").replace(/\.html$/, "");
-  return `${OFFICIAL_SITE_ORIGIN}/${route}`;
+  return `${OFFICIAL_SITE_ORIGIN}/${route}/`;
 }
 
 function isValidDate(value) {
@@ -114,6 +118,9 @@ if (!fs.existsSync(root)) {
     if (h1Count !== 1) failures.push(`${rel}: expected 1 h1, found ${h1Count}`);
     if (text.length < 200) failures.push(`${rel}: static HTML body is unexpectedly short`);
     if (!text.includes(companyName)) failures.push(`${rel}: static HTML does not contain the company name`);
+    if (!text.includes(storeName)) failures.push(`${rel}: static HTML does not contain the store name`);
+    if (!text.includes(phone)) failures.push(`${rel}: static HTML does not contain the phone number`);
+    if (!text.includes(address)) failures.push(`${rel}: static HTML does not contain the store address`);
 
     if (titles.has(title)) failures.push(`${rel}: duplicate title also used by ${titles.get(title)}`);
     else titles.set(title, rel);
@@ -130,6 +137,9 @@ if (!fs.existsSync(root)) {
         failures.push(`${rel}: invalid canonical ${canonicals[0]}`);
       }
       if (canonicalUrl?.origin !== OFFICIAL_SITE_ORIGIN) failures.push(`${rel}: canonical is outside ${OFFICIAL_SITE_ORIGIN}`);
+      if (!is404 && canonicalUrl?.toString() !== builtPathToUrl(rel)) {
+        failures.push(`${rel}: canonical ${canonicalUrl?.toString()} does not match the direct 200 URL ${builtPathToUrl(rel)}`);
+      }
     }
 
     if (is404 && !hasNoIndex) failures.push("404.html: missing noindex");
@@ -142,6 +152,7 @@ if (!fs.existsSync(root)) {
     }
 
     if (!jsonLdBlocks.length) failures.push(`${rel}: missing JSON-LD schema`);
+    if (!is404 && !html.includes(businessId)) failures.push(`${rel}: missing unified business entity ${businessId}`);
     for (const block of jsonLdBlocks) {
       try {
         JSON.parse(block[1]);
@@ -152,7 +163,7 @@ if (!fs.existsSync(root)) {
   }
 
   const homepage = fs.existsSync(path.join(root, "index.html")) ? fs.readFileSync(path.join(root, "index.html"), "utf8") : "";
-  for (const requiredText of [companyName, "长兴辉祥汽贸", "15268286681", "浙江省湖州市长兴县", "主营业务", "主营品牌", "服务地区", 'href="/about"', 'href="/services"', 'href="/contact"']) {
+  for (const requiredText of [companyName, "长兴辉祥汽贸", phone, "浙江省湖州市长兴县", "主营业务", "主营品牌", "服务地区", 'href="/about/"', 'href="/services/"', 'href="/contact/"']) {
     if (!homepage.includes(requiredText)) failures.push(`index.html: missing crawlable content ${requiredText}`);
   }
 
@@ -182,7 +193,7 @@ if (!fs.existsSync(root)) {
       }
     }
 
-    if (sitemapUrls.length < 17) failures.push(`sitemap.xml: expected at least 17 URLs, found ${sitemapUrls.length}`);
+    if (sitemapUrls.length < 18) failures.push(`sitemap.xml: expected at least 18 URLs, found ${sitemapUrls.length}`);
     if (new Set(sitemapUrls).size !== sitemapUrls.length) failures.push("sitemap.xml: contains duplicate URLs");
     if (sitemapUrls.some((url) => /\/404(?:\/|$)/.test(url))) failures.push("sitemap.xml: contains the 404 page");
     for (const builtUrl of indexableBuiltUrls) {
@@ -195,8 +206,27 @@ if (!fs.existsSync(root)) {
     const robots = fs.readFileSync(robotsPath, "utf8");
     if (!robots.includes("User-agent: *")) failures.push("robots.txt: missing User-agent: *");
     if (!robots.includes("Allow: /")) failures.push("robots.txt: missing Allow: /");
+    if (!robots.includes("User-agent: OAI-SearchBot")) failures.push("robots.txt: missing OAI-SearchBot rule");
     if (/Disallow:\s*\/$/im.test(robots)) failures.push("robots.txt: blocks the whole site");
     if (!robots.includes(`Sitemap: ${OFFICIAL_SITE_ORIGIN}/sitemap.xml`)) failures.push("robots.txt: references the wrong sitemap");
+  }
+
+  const launchAnnouncementPath = path.join(root, "news", "official-website-launch-announcement", "index.html");
+  if (!fs.existsSync(launchAnnouncementPath)) {
+    failures.push("Missing official website launch announcement page");
+  } else {
+    const announcement = fs.readFileSync(launchAnnouncementPath, "utf8");
+    for (const requiredText of [
+      "长兴辉祥汽车贸易有限公司官网已正式上线。",
+      "浙ICP备2026052872号-1",
+      "浙公网安备33052202000930号",
+      "网站所展示的车型配置、颜色、价格和库存会随厂家配置及实际销售情况变化"
+    ]) {
+      if (!announcement.includes(requiredText)) failures.push(`launch announcement: missing ${requiredText}`);
+    }
+    if (!announcement.includes('"@type":"Article"')) failures.push("launch announcement: missing Article JSON-LD");
+    if (!announcement.includes('"@type":"BreadcrumbList"')) failures.push("launch announcement: missing BreadcrumbList JSON-LD");
+    if (!announcement.includes('property="og:type" content="article"')) failures.push("launch announcement: missing article Open Graph type");
   }
 }
 

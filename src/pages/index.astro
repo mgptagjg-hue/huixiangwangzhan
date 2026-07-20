@@ -218,7 +218,7 @@ const latestNews = newsArticles.slice(0, 3);
           {latestNews.map((item) => (
             <article>
               <time datetime={item.date}>{item.date}</time>
-              <h3><a href={`/news/${item.slug}`}>{item.title}</a></h3>
+              <h3><a href={`/news/${item.slug}/`}>{item.title}</a></h3>
               <p>{item.description}</p>
             </article>
           ))}

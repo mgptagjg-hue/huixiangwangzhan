@@ -24,3 +24,14 @@ export function resolveSiteOrigin(value = configuredOrigin) {
 }
 
 export const SITE_ORIGIN = resolveSiteOrigin();
+
+export function canonicalPageUrl(pathname) {
+  const url = new URL(pathname, `${SITE_ORIGIN}/`);
+  if (url.origin !== SITE_ORIGIN) {
+    throw new Error(`Canonical page URL must stay on ${SITE_ORIGIN}. Received: ${pathname}`);
+  }
+  if (url.pathname !== "/" && !url.pathname.endsWith("/")) {
+    url.pathname = `${url.pathname}/`;
+  }
+  return url.toString();
+}

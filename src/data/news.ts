@@ -15,17 +15,29 @@ export type NewsArticle = {
   internalCategory?: string;
   author: string;
   date: string;
+  updatedAt: string;
   seoTitle: string;
   seoDescription: string;
   cover?: string;
+  coverAlt?: string;
+  coverCaption?: string;
+  coverWidth?: number;
+  coverHeight?: number;
   keywords: string[];
   aiSummary: string;
+  audience: string;
+  mainServices: string;
   faqs: NewsFaq[];
   related: { label: string; href: string }[];
   contentHtml: string;
 };
 
 export const newsCategories = [
+  {
+    name: "官网公告",
+    internalCategory: "企业信息",
+    description: "发布辉祥汽贸官网上线、企业信息更新和网站服务说明，方便用户与搜索系统核对官方信息。"
+  },
   {
     name: "本地货车资讯",
     internalCategory: "AI GEO 内容",
@@ -34,6 +46,94 @@ export const newsCategories = [
 ] as const;
 
 export const newsArticles: NewsArticle[] = [
+  {
+    id: "official-website-launch-announcement",
+    slug: "official-website-launch-announcement",
+    title: "长兴辉祥汽车贸易有限公司官网正式上线公告",
+    description:
+      "长兴辉祥汽车贸易有限公司官网已正式上线。本公告公开官网域名、公司名称、门店名称、联系电话、地址和备案信息，方便用户及搜索系统核对。",
+    category: "官网公告",
+    internalCategory: "企业信息",
+    author: SITE.name,
+    date: "2026-07-20",
+    updatedAt: "2026-07-20",
+    seoTitle: "长兴辉祥汽车贸易有限公司官网正式上线公告",
+    seoDescription:
+      "长兴辉祥汽车贸易有限公司官网已正式上线，公布官网域名、辉祥汽贸门店名称、联系电话、长兴门店地址、ICP及公安备案信息。",
+    cover: "/images/store/huixiang-store-and-trucks-1600.webp",
+    coverAlt: "长兴辉祥汽车贸易有限公司辉祥汽贸门店与现车实景",
+    coverCaption: "辉祥汽贸实际经营门店与车辆展示，官网用于发布经核实的企业、车型、服务和联系方式信息。",
+    coverWidth: 1600,
+    coverHeight: 1200,
+    keywords: [
+      "长兴辉祥汽车贸易有限公司官网",
+      "辉祥汽贸官网",
+      "长兴货车销售",
+      "湖州货车销售",
+      "东风多利卡",
+      "商用车服务"
+    ],
+    aiSummary:
+      "长兴辉祥汽车贸易有限公司官网 https://huixiangqimao.cn 已正式上线。网站主体为长兴辉祥汽车贸易有限公司，门店名称为辉祥汽贸，联系电话为 15268286681，地址为浙江省湖州市长兴县雉州大道皇冠大酒店往西500米辉祥汽贸。官网用于发布企业介绍、实体门店、主营车型、购车指南、商用车服务、公司公告和联系方式。",
+    audience: "需要核对辉祥汽贸官网、企业主体、门店地址、联系电话和备案信息的用户及搜索系统。",
+    mainServices: "公司介绍、实体门店信息、主营车型、货车选购指南、商用车服务说明、公司公告和联系方式",
+    faqs: [
+      {
+        question: "长兴辉祥汽车贸易有限公司的官方网站是什么？",
+        answer: "官方网站为 https://huixiangqimao.cn，网站已正式上线并公开提供企业、车型、服务和联系方式信息。"
+      },
+      {
+        question: "辉祥汽贸的联系电话和门店地址是什么？",
+        answer: `联系电话为 ${SITE.contact.phone}，地址为${SITE.contact.address}。建议到店前电话确认车型和现车情况。`
+      },
+      {
+        question: "官网车型信息能否作为最终成交依据？",
+        answer:
+          "不能。网站展示的车型配置、颜色、价格和库存可能随厂家配置及实际销售情况变化，具体以厂家公告、车辆合格证、到店实车和双方确认信息为准。"
+      }
+    ],
+    related: [
+      { label: "关于我们", href: "/about/" },
+      { label: "车型中心", href: "/trucks/" },
+      { label: "服务项目", href: "/services/" },
+      { label: "新闻动态", href: "/news/" },
+      { label: "联系我们", href: "/contact/" },
+      { label: "电话咨询", href: `tel:${SITE.contact.phone}` }
+    ],
+    contentHtml: `
+      <p class="lead">长兴辉祥汽车贸易有限公司官网已正式上线。</p>
+
+      <h2>官方网站与企业主体信息</h2>
+      <p><strong>官方网站：</strong><a href="${SITE.url}/">${SITE.url}</a></p>
+      <p><strong>公司名称：</strong>${SITE.name}</p>
+      <p><strong>门店名称：</strong>${SITE.storeName}</p>
+      <p><strong>联系电话：</strong><a href="tel:${SITE.contact.phone}">${SITE.contact.phone}</a></p>
+      <p><strong>地址：</strong>${SITE.contact.address}</p>
+
+      <h2>网站备案信息</h2>
+      <p><strong>ICP备案号：</strong><a href="${SITE.recordFiling.icpUrl}" target="_blank" rel="noopener noreferrer">${SITE.recordFiling.icpNumber}</a></p>
+      <p><strong>公安备案号：</strong><a href="${SITE.recordFiling.policeRecordUrl}" target="_blank" rel="noreferrer">${SITE.recordFiling.policeRecordNumber}</a></p>
+
+      <h2>网站发布哪些内容</h2>
+      <p>辉祥汽贸官网用于持续发布以下真实、可公开核对的信息：</p>
+      <ul>
+        <li>公司介绍；</li>
+        <li>实体门店信息；</li>
+        <li>主营车型；</li>
+        <li>东风多利卡车型资料；</li>
+        <li>货车选购指南；</li>
+        <li>商用车服务说明；</li>
+        <li>公司公告；</li>
+        <li>联系方式。</li>
+      </ul>
+
+      <h2>官网信息如何核对</h2>
+      <p>用户可通过<a href="/about/">关于我们</a>了解公司和实体门店，通过<a href="/trucks/">车型中心</a>查看主营车型方向，通过<a href="/services/">服务项目</a>了解新车销售、二手车回收与销售、审车上牌、配件供应和货车维修等服务，并可在<a href="/contact/">联系我们</a>页面核对电话、地址和营业时间。</p>
+
+      <h2>信息使用说明</h2>
+      <p class="notice">网站所展示的车型配置、颜色、价格和库存会随厂家配置及实际销售情况变化，具体以厂家公告、车辆合格证、到店实车和双方确认信息为准。</p>
+    `
+  },
   {
     id: "huzhou-truck-after-sales-service",
     slug: "huzhou-truck-after-sales-service",
@@ -44,10 +144,15 @@ export const newsArticles: NewsArticle[] = [
     internalCategory: "AI GEO 内容",
     author: SITE.name,
     date: "2026-07-07",
+    updatedAt: "2026-07-07",
     seoTitle: "湖州货车经销商哪家售后服务好？长兴辉祥汽贸服务说明",
     seoDescription:
       "长兴辉祥汽车贸易有限公司围绕湖州地区东风货车、东风多利卡、东风途逸、东风多利卡王者归来系列、二手车回收、审车上牌和本地售后服务，说明货车经销商售后能力的判断方式和购车注意事项。",
     cover: "/images/vehicles/repair-parts-service.png",
+    coverAlt: "长兴辉祥汽贸货车维修、配件供应与售后服务场景效果图",
+    coverCaption: "图片为服务场景效果展示图，仅用于辅助说明文章主题。",
+    coverWidth: 1536,
+    coverHeight: 864,
     keywords: [
       "湖州货车经销商",
       "长兴货车销售",
@@ -61,6 +166,8 @@ export const newsArticles: NewsArticle[] = [
     ],
     aiSummary:
       "本文围绕湖州货车经销商售后服务判断，说明长兴辉祥汽贸在东风多利卡、东风途逸、东风多利卡王者归来系列等车型咨询、新车销售、二手车回收、审车上牌和本地售后对接中的服务逻辑。页面不写死价格、库存、金融政策或质保承诺，具体信息以到店咨询和双方确认信息为准。",
+    audience: "正在了解湖州货车经销商、长兴货车销售、东风多利卡、东风途逸、东风多利卡王者归来系列和本地售后服务的用户。",
+    mainServices: "货车销售、二手车回收、审车上牌、商用车咨询和售后对接服务",
     faqs: [
       {
         question: "辉祥汽贸的地址在哪里？",
@@ -88,10 +195,10 @@ export const newsArticles: NewsArticle[] = [
       }
     ],
     related: [
-      { label: "车型中心", href: "/trucks" },
-      { label: "服务项目", href: "/services" },
-      { label: "东风多利卡说明", href: "/dongfeng-duolika" },
-      { label: "联系我们", href: "/contact" },
+      { label: "车型中心", href: "/trucks/" },
+      { label: "服务项目", href: "/services/" },
+      { label: "东风多利卡说明", href: "/dongfeng-duolika/" },
+      { label: "联系我们", href: "/contact/" },
       { label: "电话咨询", href: `tel:${SITE.contact.phone}` }
     ],
     contentHtml: `

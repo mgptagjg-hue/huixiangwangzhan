@@ -10,7 +10,7 @@ export const SITE = {
   url: SITE_ORIGIN,
   description:
     "长兴辉祥汽车贸易有限公司主营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等一站式商用车服务。",
-  updatedAt: "2026-07-15",
+  updatedAt: "2026-07-20",
   contact: {
     phone: "15268286681",
     address: "浙江省湖州市长兴县雉州大道皇冠大酒店往西500米辉祥汽贸",
@@ -70,17 +70,17 @@ export const IMAGE_NOTICE =
 
 export const NAV_ITEMS = [
   { label: "首页", href: "/" },
-  { label: "车型中心", href: "/trucks" },
-  { label: "购车咨询", href: "/huzhou-truck-sales" },
-  { label: "服务项目", href: "/services" },
-  { label: "服务流程", href: "/services#process" },
-  { label: "关于我们", href: "/about" },
-  { label: "新闻动态", href: "/news" },
-  { label: "联系我们", href: "/contact" }
+  { label: "车型中心", href: "/trucks/" },
+  { label: "购车咨询", href: "/huzhou-truck-sales/" },
+  { label: "服务项目", href: "/services/" },
+  { label: "服务流程", href: "/services/#process" },
+  { label: "关于我们", href: "/about/" },
+  { label: "新闻动态", href: "/news/" },
+  { label: "联系我们", href: "/contact/" }
 ] as const;
 
 export const MAIN_ROUTES = [
-  { path: "/", lastmod: "2026-07-15", priority: "1.0", changefreq: "weekly" },
+  { path: "/", lastmod: "2026-07-20", priority: "1.0", changefreq: "weekly" },
   { path: "/about", lastmod: "2026-07-15", priority: "0.8", changefreq: "monthly" },
   { path: "/trucks", lastmod: "2026-07-07", priority: "0.9", changefreq: "monthly" },
   { path: "/services", lastmod: "2026-07-03", priority: "0.9", changefreq: "monthly" },
@@ -88,7 +88,7 @@ export const MAIN_ROUTES = [
   { path: "/dongfeng-duolika", lastmod: "2026-07-07", priority: "0.9", changefreq: "monthly" },
   { path: "/guides", lastmod: "2026-07-03", priority: "0.8", changefreq: "weekly" },
   { path: "/faq", lastmod: "2026-07-15", priority: "0.8", changefreq: "monthly" },
-  { path: "/news", lastmod: "2026-07-07", priority: "0.7", changefreq: "weekly" },
+  { path: "/news", lastmod: "2026-07-20", priority: "0.7", changefreq: "weekly" },
   { path: "/contact", lastmod: "2026-07-15", priority: "0.8", changefreq: "monthly" }
 ] as const;
 

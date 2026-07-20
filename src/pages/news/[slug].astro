@@ -19,8 +19,8 @@ export function getStaticPaths() {
 const { article } = Astro.props as { article: NewsArticle };
 const breadcrumbs = [
   { label: "首页", href: "/" },
-  { label: "新闻动态", href: "/news" },
-  { label: article.title, href: `/news/${article.slug}` }
+  { label: "新闻动态", href: "/news/" },
+  { label: article.title, href: `/news/${article.slug}/` }
 ];
 ---
 
@@ -30,16 +30,18 @@ const breadcrumbs = [
   canonicalPath={`/news/${article.slug}`}
   breadcrumbs={breadcrumbs}
   ogType="article"
-  updatedAt={article.date}
+  ogImage={article.cover}
+  ogImageAlt={article.coverAlt}
+  updatedAt={article.updatedAt}
   schemas={[newsArticleSchema(article), faqSchema(article.faqs)]}
 >
   <PageHero title={article.title} description={article.description} breadcrumbs={breadcrumbs} />
   <FactPanel
     conclusion={article.aiSummary}
-    audience="正在了解湖州货车经销商、长兴货车销售、东风多利卡、东风途逸、东风多利卡王者归来系列和本地售后服务的用户。"
+    audience={article.audience}
     serviceArea={SITE.serviceAreaText}
-    mainServices="货车销售、二手车回收、审车上牌、商用车咨询和售后对接服务"
-    updatedAt={article.date}
+    mainServices={article.mainServices}
+    updatedAt={article.updatedAt}
   />
 
   <article class="section section-muted">
@@ -50,6 +52,7 @@ const breadcrumbs = [
           {article.internalCategory && <span>后台备注分类：{article.internalCategory}</span>}
           <span>作者：{article.author}</span>
           <span>发布：<time datetime={article.date}>{article.date}</time></span>
+          <span>更新：<time datetime={article.updatedAt}>{article.updatedAt}</time></span>
         </div>
         <div class="keyword-row" aria-label="关键词方向">
           {article.keywords.map((keyword) => <span>{keyword}</span>)}
@@ -58,8 +61,14 @@ const breadcrumbs = [
 
       {article.cover && (
         <figure class="article-cover">
-          <img src={article.cover} alt="长兴辉祥汽贸货车售后服务场景图" loading="eager" width="1536" height="864" />
-          <figcaption>图片为服务场景效果展示图，仅用于辅助说明文章主题。</figcaption>
+          <img
+            src={article.cover}
+            alt={article.coverAlt ?? article.title}
+            loading="eager"
+            width={article.coverWidth ?? 1600}
+            height={article.coverHeight ?? 1200}
+          />
+          <figcaption>{article.coverCaption ?? "图片用于辅助说明文章主题。"}</figcaption>
         </figure>
       )}
 
@@ -123,9 +132,9 @@ const breadcrumbs = [
   }
 
   .article-cover img {
+    display: block;
     width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
+    height: auto;
   }
 
   .article-cover figcaption {
