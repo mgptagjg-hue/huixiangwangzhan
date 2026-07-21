@@ -39,6 +39,9 @@ const requiredPages = [
 ];
 const forbiddenOriginPattern = /huixiang-auto\.example|https?:\/\/(?:localhost|127\.0\.0\.1)(?=[:/]|$)/i;
 const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+const staticVerificationFiles = new Map([
+  ["ByteDanceVerify.html", "IcGxuEx9vFouoT6roKt7"]
+]);
 const htmlFiles = [];
 const failures = [];
 
@@ -46,7 +49,10 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full);
-    if (entry.isFile() && entry.name.endsWith(".html")) htmlFiles.push(full);
+    const relative = path.relative(root, full).replaceAll("\\", "/");
+    if (entry.isFile() && entry.name.endsWith(".html") && !staticVerificationFiles.has(relative)) {
+      htmlFiles.push(full);
+    }
   }
 }
 
@@ -88,6 +94,18 @@ if (!fs.existsSync(root)) {
   failures.push("dist directory does not exist; run npm run build first.");
 } else {
   walk(root);
+
+  for (const [relativePath, expectedContent] of staticVerificationFiles) {
+    const verificationPath = path.join(root, relativePath);
+    if (!fs.existsSync(verificationPath)) {
+      failures.push(`Missing static verification file: ${relativePath}`);
+      continue;
+    }
+    const actual = fs.readFileSync(verificationPath);
+    if (!actual.equals(Buffer.from(expectedContent, "utf8"))) {
+      failures.push(`${relativePath}: verification content changed during build`);
+    }
+  }
 
   for (const rel of requiredPages) {
     if (!fs.existsSync(path.join(root, rel))) failures.push(`Missing built page: ${rel}`);
