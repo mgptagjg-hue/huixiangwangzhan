@@ -60,7 +60,10 @@ const allSchemas = [
     <Fragment set:html={'<meta name="baidu-site-verification" content="codeva-WvxQBXoXv6" />'} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noIndex && <meta name="robots" content="noindex, follow" />}
+    <meta
+      name="robots"
+      content={noIndex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
+    />
     <link rel="canonical" href={canonicalUrl} />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:type" content={ogType} />
@@ -78,6 +81,7 @@ const allSchemas = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="last-modified" content={updatedAt} />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title={`${SITE.name}文本索引`} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {allSchemas.map((schema) => (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />

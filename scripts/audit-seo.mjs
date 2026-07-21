@@ -115,7 +115,7 @@ if (!fs.existsSync(root)) {
     if (!fs.existsSync(path.join(root, rel))) failures.push(`Missing built page: ${rel}`);
   }
 
-  for (const requiredFile of ["sitemap.xml", "robots.txt"]) {
+  for (const requiredFile of ["sitemap.xml", "robots.txt", "llms.txt"]) {
     if (!fs.existsSync(path.join(root, requiredFile))) failures.push(`Missing ${requiredFile}`);
   }
 
@@ -133,6 +133,7 @@ if (!fs.existsSync(root)) {
     const jsonLdBlocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)];
     const canonicals = canonicalMatches(html);
     const hasNoIndex = /<meta\s+[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+    const hasExplicitIndex = /<meta\s+[^>]*name=["']robots["'][^>]*content=["'][^"']*\bindex\b/i.test(html);
     const is404 = rel === "404.html";
     const toutiaoPushCount = html.split(toutiaoPushUrl).length - 1;
     const toutiaoScriptIdCount = html.split(toutiaoScriptId).length - 1;
@@ -142,7 +143,9 @@ if (!fs.existsSync(root)) {
     if (toutiaoPushCount !== 1) failures.push(`${rel}: expected 1 Toutiao push URL, found ${toutiaoPushCount}`);
     if (toutiaoScriptIdCount !== 1) failures.push(`${rel}: expected 1 Toutiao ttzz assignment, found ${toutiaoScriptIdCount}`);
     if (h1Count !== 1) failures.push(`${rel}: expected 1 h1, found ${h1Count}`);
-    if (text.length < 200) failures.push(`${rel}: static HTML body is unexpectedly short`);
+    if (text.length < (is404 ? 200 : 800)) failures.push(`${rel}: static HTML body is unexpectedly short`);
+    if (!/<main[\s>]/i.test(html)) failures.push(`${rel}: missing semantic main content`);
+    if (/<div\s+id=["']root["'][^>]*>\s*<\/div>/i.test(html)) failures.push(`${rel}: contains an empty client-rendered root`);
     if (!text.includes(companyName)) failures.push(`${rel}: static HTML does not contain the company name`);
     if (!text.includes(storeName)) failures.push(`${rel}: static HTML does not contain the store name`);
     if (!text.includes(phone)) failures.push(`${rel}: static HTML does not contain the phone number`);
@@ -170,6 +173,7 @@ if (!fs.existsSync(root)) {
 
     if (is404 && !hasNoIndex) failures.push("404.html: missing noindex");
     if (!is404 && hasNoIndex) failures.push(`${rel}: public page contains noindex`);
+    if (!is404 && !hasExplicitIndex) failures.push(`${rel}: public page is missing an explicit index robots directive`);
     if (!is404) indexableBuiltUrls.push(builtPathToUrl(rel));
     if (forbiddenOriginPattern.test(html)) failures.push(`${rel}: contains localhost or a test domain`);
 
@@ -234,8 +238,17 @@ if (!fs.existsSync(root)) {
     if (!robots.includes("Allow: /")) failures.push("robots.txt: missing Allow: /");
     if (!robots.includes("User-agent: OAI-SearchBot")) failures.push("robots.txt: missing OAI-SearchBot rule");
     if (!robots.includes("User-agent: ToutiaoSpider")) failures.push("robots.txt: missing ToutiaoSpider rule");
+    if (!robots.includes("User-agent: Bytespider")) failures.push("robots.txt: missing Bytespider rule");
     if (/Disallow:\s*\/$/im.test(robots)) failures.push("robots.txt: blocks the whole site");
     if (!robots.includes(`Sitemap: ${OFFICIAL_SITE_ORIGIN}/sitemap.xml`)) failures.push("robots.txt: references the wrong sitemap");
+  }
+
+  const llmsPath = path.join(root, "llms.txt");
+  if (fs.existsSync(llmsPath)) {
+    const llms = fs.readFileSync(llmsPath, "utf8");
+    for (const requiredText of [companyName, storeName, phone, address, `${OFFICIAL_SITE_ORIGIN}/news/`]) {
+      if (!llms.includes(requiredText)) failures.push(`llms.txt: missing ${requiredText}`);
+    }
   }
 
   const launchAnnouncementPath = path.join(root, "news", "official-website-launch-announcement", "index.html");

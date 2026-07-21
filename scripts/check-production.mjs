@@ -9,7 +9,16 @@ const PHONE = "15268286681";
 const ADDRESS = "浙江省湖州市长兴县雉州大道皇冠大酒店往西500米辉祥汽贸";
 const TOUTIAO_PUSH_URL = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?6333db47b94f0b0dd6f60e284337c2d762189f322152e09641a27daf1c3e2123bc434964556b7d7129e9b750ed197d397efd7b0c6c715c1701396e1af40cec962b8d7c8c6655c9b00211740aa8a98e2e";
 const BYTEDANCE_VERIFICATION_CONTENT = "IcGxuEx9vFouoT6roKt7";
-const USER_AGENTS = ["Mozilla/5.0", "Baiduspider", "bingbot", "Googlebot", "OAI-SearchBot", "ToutiaoSpider"];
+const USER_AGENTS = [
+  "Mozilla/5.0",
+  "Baiduspider",
+  "bingbot",
+  "Googlebot",
+  "OAI-SearchBot",
+  "ToutiaoSpider",
+  "Bytespider",
+  "Mozilla/5.0 (compatible; Bytespider; spider-feedback@bytedance.com)"
+];
 const REQUEST_TIMEOUT_MS = 20_000;
 const failures = [];
 
@@ -54,6 +63,15 @@ function sitemapUrls(xml) {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1].trim());
 }
 
+function extractText(html) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 async function checkHomepageByUserAgent() {
   const hashes = new Map();
   for (const userAgent of USER_AGENTS) {
@@ -65,12 +83,16 @@ async function checkHomepageByUserAgent() {
 
     const { response, body, elapsedMs, contentType } = result;
     const containsCompany = body.includes(COMPANY_NAME);
+    const textLength = extractText(body).length;
     console.log(
-      `UA ${userAgent}: ${response.status} ${response.url} ${elapsedMs}ms ${contentType} ${body.length} bytes company=${containsCompany}`
+      `UA ${userAgent}: ${response.status} ${response.url} ${elapsedMs}ms ${contentType} ${body.length} bytes ${textLength} text chars company=${containsCompany}`
     );
     if (response.status !== 200) fail(`${userAgent}: homepage returned ${response.status}.`);
     if (!contentType.toLowerCase().includes("text/html")) fail(`${userAgent}: homepage Content-Type is ${contentType}.`);
     if (!containsCompany) fail(`${userAgent}: homepage HTML does not contain the company name.`);
+    if (textLength < 1_000) fail(`${userAgent}: homepage static text is unexpectedly short (${textLength} characters).`);
+    if (!/<main[\s>]/i.test(body)) fail(`${userAgent}: homepage HTML is missing semantic main content.`);
+    if (/<div\s+id=["']root["'][^>]*>\s*<\/div>/i.test(body)) fail(`${userAgent}: homepage is an empty client-rendered shell.`);
     if (!body.includes(TOUTIAO_PUSH_URL)) fail(`${userAgent}: homepage HTML does not contain the Toutiao auto-push script.`);
     if (response.url !== `${OFFICIAL_SITE_ORIGIN}/`) fail(`${userAgent}: final URL is ${response.url}.`);
     hashes.set(userAgent, createHash("sha256").update(body).digest("hex"));
@@ -93,6 +115,7 @@ async function checkTextResources() {
     if (!robots.body.includes("User-agent: *") || !robots.body.includes("Allow: /")) fail("robots.txt does not allow public crawling.");
     if (!robots.body.includes("User-agent: OAI-SearchBot")) fail("robots.txt does not explicitly allow OAI-SearchBot.");
     if (!robots.body.includes("User-agent: ToutiaoSpider")) fail("robots.txt does not explicitly allow ToutiaoSpider.");
+    if (!robots.body.includes("User-agent: Bytespider")) fail("robots.txt does not explicitly allow Bytespider.");
     if (!robots.body.includes(`Sitemap: ${OFFICIAL_SITE_ORIGIN}/sitemap.xml`)) fail("robots.txt references the wrong sitemap.");
     if (/Disallow:\s*\/$/im.test(robots.body)) fail("robots.txt blocks the entire site.");
     if (!failures.some((item) => item.startsWith("robots.txt"))) pass("robots.txt is readable and allows crawling.");
@@ -116,6 +139,20 @@ async function checkTextResources() {
     fail("sitemap.xml contains a URL outside the canonical origin.");
   }
   if (urls.length) pass(`sitemap.xml parsed with ${urls.length} URLs.`);
+
+  const llms = await request(`${OFFICIAL_SITE_ORIGIN}/llms.txt`);
+  if (!llms.ok) {
+    fail(`llms.txt request failed (${llms.error.message}).`);
+  } else if (
+    llms.response.status !== 200 ||
+    !llms.contentType.toLowerCase().includes("text/plain") ||
+    !llms.body.includes(COMPANY_NAME) ||
+    !llms.body.includes(PHONE)
+  ) {
+    fail(`llms.txt is not serving the expected public company information (${llms.response.status}, ${llms.contentType}).`);
+  } else {
+    pass("llms.txt is publicly readable.");
+  }
   return urls;
 }
 
@@ -135,6 +172,9 @@ async function checkSitemapPages(urls) {
       if (result.response.url !== url) fail(`${url}: redirects to ${result.response.url}.`);
       if (!result.contentType.toLowerCase().includes("text/html")) fail(`${url}: Content-Type is ${result.contentType}.`);
       if (result.body.length < 1_000) fail(`${url}: HTML body is unexpectedly short.`);
+      if (extractText(result.body).length < 800) fail(`${url}: static text content is unexpectedly short.`);
+      if (!/<main[\s>]/i.test(result.body)) fail(`${url}: is missing semantic main content.`);
+      if (/<div\s+id=["']root["'][^>]*>\s*<\/div>/i.test(result.body)) fail(`${url}: is an empty client-rendered shell.`);
       if (/<meta\s+[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(result.body)) fail(`${url}: contains noindex.`);
       if ((result.body.match(/<h1[\s>]/gi) ?? []).length !== 1) fail(`${url}: does not contain exactly one H1.`);
       if (!/<title>[\s\S]+<\/title>/i.test(result.body)) fail(`${url}: is missing a title.`);

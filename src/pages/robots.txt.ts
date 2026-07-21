@@ -9,6 +9,9 @@ Allow: /
 User-agent: ToutiaoSpider
 Allow: /
 
+User-agent: Bytespider
+Allow: /
+
 User-agent: OAI-SearchBot
 Allow: /
 
