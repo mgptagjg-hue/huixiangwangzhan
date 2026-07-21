@@ -11,7 +11,6 @@ const businessId = `${OFFICIAL_SITE_ORIGIN}/#business`;
 const banned = [
   "最好",
   "第一",
-  "包过",
   "最低价",
   "权威推荐",
   "最便宜",
@@ -180,6 +179,12 @@ if (!fs.existsSync(root)) {
     for (const term of banned) {
       if (html.includes(term)) failures.push(`${rel}: contains banned marketing term "${term}"`);
     }
+    const promiseCheck = html
+      .replaceAll("不承诺包过", "")
+      .replaceAll("不能承诺包过", "")
+      .replaceAll("不等于包过", "")
+      .replaceAll("不提供包过承诺", "");
+    if (promiseCheck.includes("包过")) failures.push(`${rel}: contains an affirmative inspection-pass promise`);
 
     if (!jsonLdBlocks.length) failures.push(`${rel}: missing JSON-LD schema`);
     if (!is404 && !html.includes(businessId)) failures.push(`${rel}: missing unified business entity ${businessId}`);
@@ -279,7 +284,6 @@ if (!fs.existsSync(root)) {
     "发布前检查",
     "调整临时配重",
     "选择上线时机",
-    "包过",
     "8万落地",
     "待补充",
     "Schema JSON-LD 建议",
@@ -303,6 +307,44 @@ if (!fs.existsSync(root)) {
     if (!articleHtml.includes('"@type":"Article"')) failures.push(`${relativePath}: missing Article JSON-LD`);
     if (!articleHtml.includes('"@type":"FAQPage"')) failures.push(`${relativePath}: missing FAQPage JSON-LD`);
     if (!articleHtml.includes('"@type":"BreadcrumbList"')) failures.push(`${relativePath}: missing BreadcrumbList JSON-LD`);
+    if (articleHtml.includes('class="article-cover"')) failures.push(`${relativePath}: consulting article must not render a cover image`);
+    if (articleHtml.includes('property="og:image"')) failures.push(`${relativePath}: consulting article must not declare an Open Graph image`);
+
+    const articleSchemas = [...articleHtml.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)]
+      .map((match) => {
+        try {
+          return JSON.parse(match[1]);
+        } catch {
+          return null;
+        }
+      })
+      .filter((schema) => schema?.["@type"] === "Article");
+    if (articleSchemas.some((schema) => "image" in schema)) {
+      failures.push(`${relativePath}: text-only Article JSON-LD must omit image`);
+    }
+  }
+
+  const afterSalesArticle = fs.readFileSync(consultingArticlePaths[0], "utf8");
+  for (const requiredText of [
+    "湖州货车经销商哪家售后服务好？长兴辉祥汽贸的服务逻辑拆解",
+    "历史落地预算约 8 万元",
+    "多次购车并办理旧车置换",
+    "具体品牌授权范围和有效期限，可到店查看当前有效资料",
+    "本文中的客户案例为门店实际服务经历的匿名整理"
+  ]) {
+    if (!afterSalesArticle.includes(requiredText)) failures.push(`after-sales article: missing retained business detail ${requiredText}`);
+  }
+
+  const registrationArticle = fs.readFileSync(consultingArticlePaths[1], "utf8");
+  for (const requiredText of [
+    "湖州审车上牌找哪家代办快？辉祥汽贸的两个实际案例参考",
+    "使用年限约 20 年的凯马自卸车",
+    "该历史个案实际在当天完成",
+    "该历史个案在一个上午内完成",
+    "上述时间仅为历史个案，不代表所有车辆都能在相同时间内完成",
+    "不承诺包过"
+  ]) {
+    if (!registrationArticle.includes(requiredText)) failures.push(`registration article: missing retained business detail ${requiredText}`);
   }
 }
 

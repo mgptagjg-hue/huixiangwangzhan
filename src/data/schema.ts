@@ -169,7 +169,7 @@ export function newsArticleSchema(article: NewsArticle) {
     publisher: {
       "@id": businessId
     },
-    image: article.cover ? absoluteUrl(article.cover) : absoluteUrl("/images/vehicles/hero-3d-truck.png"),
+    ...(article.cover ? { image: absoluteUrl(article.cover) } : {}),
     mainEntityOfPage: pageUrl(`/news/${article.slug}`),
     inLanguage: "zh-CN"
   };

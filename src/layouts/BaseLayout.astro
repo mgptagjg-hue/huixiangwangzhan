@@ -33,7 +33,7 @@ const {
   breadcrumbs?: Crumb[];
   schemas?: Record<string, unknown>[];
   ogType?: "website" | "article";
-  ogImage?: string;
+  ogImage?: string | null;
   ogImageAlt?: string;
   updatedAt?: string;
   publishedAt?: string;
@@ -42,7 +42,7 @@ const {
 };
 
 const canonicalUrl = canonicalPageUrl(canonicalPath);
-const ogImageUrl = new URL(ogImage, SITE.url).toString();
+const ogImageUrl = ogImage ? new URL(ogImage, SITE.url).toString() : null;
 const allSchemas = [
   organizationSchema(),
   websiteSchema(),
@@ -71,15 +71,15 @@ const allSchemas = [
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:alt" content={ogImageAlt} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {ogImageUrl && <meta property="og:image:alt" content={ogImageAlt} />}
     {ogType === "article" && publishedAt && <meta property="article:published_time" content={publishedAt} />}
     {ogType === "article" && <meta property="article:modified_time" content={updatedAt} />}
     {ogType === "article" && author && <meta property="article:author" content={author} />}
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageUrl} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
     <meta name="last-modified" content={updatedAt} />
     <link rel="alternate" type="text/plain" href="/llms.txt" title={`${SITE.name}文本索引`} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
