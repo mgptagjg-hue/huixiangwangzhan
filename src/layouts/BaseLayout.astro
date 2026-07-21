@@ -23,6 +23,8 @@ const {
   ogImage = "/images/vehicles/hero-3d-truck.png",
   ogImageAlt = "长兴辉祥汽贸商用车展示",
   updatedAt = SITE.updatedAt,
+  publishedAt,
+  author,
   noIndex = false
 } = Astro.props as {
   title: string;
@@ -34,6 +36,8 @@ const {
   ogImage?: string;
   ogImageAlt?: string;
   updatedAt?: string;
+  publishedAt?: string;
+  author?: string;
   noIndex?: boolean;
 };
 
@@ -66,6 +70,9 @@ const allSchemas = [
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:alt" content={ogImageAlt} />
+    {ogType === "article" && publishedAt && <meta property="article:published_time" content={publishedAt} />}
+    {ogType === "article" && <meta property="article:modified_time" content={updatedAt} />}
+    {ogType === "article" && author && <meta property="article:author" content={author} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

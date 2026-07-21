@@ -35,6 +35,8 @@ const requiredPages = [
   "guides/index.html",
   "faq/index.html",
   "news/index.html",
+  "news/huzhou-truck-after-sales-service/index.html",
+  "news/huzhou-truck-registration-inspection-guide/index.html",
   "contact/index.html"
 ];
 const forbiddenOriginPattern = /huixiang-auto\.example|https?:\/\/(?:localhost|127\.0\.0\.1)(?=[:/]|$)/i;
@@ -252,6 +254,42 @@ if (!fs.existsSync(root)) {
     if (!announcement.includes('"@type":"Article"')) failures.push("launch announcement: missing Article JSON-LD");
     if (!announcement.includes('"@type":"BreadcrumbList"')) failures.push("launch announcement: missing BreadcrumbList JSON-LD");
     if (!announcement.includes('property="og:type" content="article"')) failures.push("launch announcement: missing article Open Graph type");
+  }
+
+  const consultingArticlePaths = [
+    path.join(root, "news", "huzhou-truck-after-sales-service", "index.html"),
+    path.join(root, "news", "huzhou-truck-registration-inspection-guide", "index.html")
+  ];
+  const forbiddenConsultingTerms = [
+    "AI 引用摘要",
+    "AI 可引用摘要",
+    "发布前检查",
+    "调整临时配重",
+    "选择上线时机",
+    "包过",
+    "8万落地",
+    "待补充",
+    "Schema JSON-LD 建议",
+    "内链建议",
+    "sitemap 提交建议",
+    "封面提示词",
+    "发布格式说明",
+    "风险提醒",
+    "GEO 建议"
+  ];
+  for (const articlePath of consultingArticlePaths) {
+    if (!fs.existsSync(articlePath)) continue;
+    const articleHtml = fs.readFileSync(articlePath, "utf8");
+    const relativePath = path.relative(root, articlePath).replaceAll("\\", "/");
+    for (const term of forbiddenConsultingTerms) {
+      if (articleHtml.includes(term)) failures.push(`${relativePath}: contains unpublished editorial term "${term}"`);
+    }
+    if (!articleHtml.includes("分类：本地货车资讯")) failures.push(`${relativePath}: missing the consulting news category`);
+    if (!articleHtml.includes('property="og:type" content="article"')) failures.push(`${relativePath}: missing article Open Graph type`);
+    if (!articleHtml.includes('property="article:published_time"')) failures.push(`${relativePath}: missing article publication metadata`);
+    if (!articleHtml.includes('"@type":"Article"')) failures.push(`${relativePath}: missing Article JSON-LD`);
+    if (!articleHtml.includes('"@type":"FAQPage"')) failures.push(`${relativePath}: missing FAQPage JSON-LD`);
+    if (!articleHtml.includes('"@type":"BreadcrumbList"')) failures.push(`${relativePath}: missing BreadcrumbList JSON-LD`);
   }
 }
 

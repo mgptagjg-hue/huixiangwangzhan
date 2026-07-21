@@ -21,7 +21,9 @@ const title = "长兴辉祥汽车贸易有限公司｜湖州长兴货车销售�
 const description =
   "长兴辉祥汽车贸易有限公司主营东风多利卡、东风途逸、东风多利卡王者归来系列、凯马凯捷、东风新能源电车、开瑞/凯瑞电车等车型，提供新车销售、二手车回收/销售、审车上牌、代办营业执照、配件供应、货车维修等一站式商用车服务。";
 const homeFaqs = CORE_FAQS.slice(0, 5);
-const latestNews = newsArticles.slice(0, 3);
+const latestNews = [...newsArticles]
+  .sort((a, b) => b.date.localeCompare(a.date) || b.updatedAt.localeCompare(a.updatedAt))
+  .slice(0, 3);
 ---
 
 <BaseLayout

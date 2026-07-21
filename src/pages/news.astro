@@ -1,5 +1,4 @@
 ---
-import AiSummary from "@components/AiSummary.astro";
 import ArticleList from "@components/ArticleList.astro";
 import ContactBand from "@components/ContactBand.astro";
 import FaqBlock from "@components/FaqBlock.astro";
@@ -18,8 +17,9 @@ const breadcrumbs = [
   { label: "首页", href: "/" },
   { label: "新闻动态", href: "/news" }
 ];
-const aiSummary =
-  "长兴辉祥汽车贸易有限公司官网新闻动态栏目用于发布本地货车资讯、AI GEO 内容、服务说明和经核实的官网公告。用户可通过本栏目了解湖州货车经销商、长兴货车销售、东风多利卡、东风途逸、东风多利卡王者归来系列、二手车回收、审车上牌和本地售后服务等信息。";
+const sortedNewsArticles = [...newsArticles].sort(
+  (a, b) => b.date.localeCompare(a.date) || b.updatedAt.localeCompare(a.updatedAt)
+);
 ---
 
 <BaseLayout
@@ -31,7 +31,7 @@ const aiSummary =
 >
   <PageHero title="新闻动态" description={description} breadcrumbs={breadcrumbs} />
   <FactPanel
-    conclusion="新闻动态栏目用于沉淀辉祥汽贸官网公告、本地货车资讯和 AI GEO 内容，文章仅使用可公开说明的信息，不写死价格、库存、政策或未经核实案例。"
+    conclusion="新闻动态栏目用于发布辉祥汽贸官网公告和本地货车资讯，文章仅使用可公开说明的信息，不写死价格、库存、政策或未经核实案例。"
     audience="正在了解湖州货车经销商、长兴货车销售、东风多利卡、东风途逸、东风多利卡王者归来系列和本地售后服务的用户。"
     serviceArea={SITE.serviceAreaText}
     mainServices={SITE.mainServices.join("、")}
@@ -42,7 +42,7 @@ const aiSummary =
     <div class="container">
       <div class="section-heading">
         <h2 class="section-title">栏目分类</h2>
-        <p class="section-lede">先建立一个长期发布 AI GEO 文案的主分类，后续可继续扩展车型资讯、服务公告和案例记录。</p>
+        <p class="section-lede">按官网公告和本地货车咨询分类整理内容，方便用户查看车型、服务与办理流程信息。</p>
       </div>
       <div class="grid-3 mt-8">
         {newsCategories.map((category) => (
@@ -59,21 +59,42 @@ const aiSummary =
   <section class="section">
     <div class="container">
       <h2 class="section-title">最新资讯</h2>
-      <div class="news-grid">
-        {newsArticles.map((article) => (
-          <article class="card news-card">
-            <div class="meta-line">
-              <span>{article.category}</span>
-              <span>发布：<time datetime={article.date}>{article.date}</time></span>
-              <span>更新：<time datetime={article.updatedAt}>{article.updatedAt}</time></span>
-              <span>作者：{article.author}</span>
+      <div class="news-filters" aria-label="新闻分类筛选">
+        <button class="news-filter is-active" type="button" data-news-filter="all" aria-pressed="true">全部</button>
+        {newsCategories.map((category) => (
+          <button class="news-filter" type="button" data-news-filter={category.name} aria-pressed="false">
+            {category.internalCategory}
+          </button>
+        ))}
+      </div>
+      <div class="news-grid" id="news-list">
+        {sortedNewsArticles.map((article) => (
+          <article class="card news-card" data-news-card data-category={article.category}>
+            {article.cover && (
+              <a class="news-cover" href={`/news/${article.slug}/`} aria-label={`阅读${article.title}`}>
+                <img
+                  src={article.cover}
+                  alt={article.coverAlt ?? article.title}
+                  loading="lazy"
+                  width={article.coverWidth ?? 1600}
+                  height={article.coverHeight ?? 1200}
+                />
+              </a>
+            )}
+            <div class="news-card-body">
+              <div class="meta-line">
+                <span>{article.category}</span>
+                <span>发布：<time datetime={article.date}>{article.date}</time></span>
+                <span>更新：<time datetime={article.updatedAt}>{article.updatedAt}</time></span>
+                <span>作者：{article.author}</span>
+              </div>
+              <h3><a href={`/news/${article.slug}/`}>{article.title}</a></h3>
+              <p>{article.description}</p>
+              <div class="keyword-row" aria-label="关键词方向">
+                {article.keywords.slice(0, 5).map((keyword) => <span>{keyword}</span>)}
+              </div>
+              <a class="text-link" href={`/news/${article.slug}/`}>阅读全文</a>
             </div>
-            <h3><a href={`/news/${article.slug}/`}>{article.title}</a></h3>
-            <p>{article.description}</p>
-            <div class="keyword-row" aria-label="关键词方向">
-              {article.keywords.slice(0, 5).map((keyword) => <span>{keyword}</span>)}
-            </div>
-            <a class="text-link" href={`/news/${article.slug}/`}>阅读全文</a>
           </article>
         ))}
       </div>
@@ -90,9 +111,27 @@ const aiSummary =
   </section>
 
   <FaqBlock faqs={CORE_FAQS.slice(0, 3)} title="新闻动态常见问题" />
-  <AiSummary summary={aiSummary} />
   <ContactBand />
 </BaseLayout>
+
+<script>
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>("[data-news-filter]");
+  const newsCards = document.querySelectorAll<HTMLElement>("[data-news-card]");
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const selectedCategory = button.dataset.newsFilter;
+      filterButtons.forEach((item) => {
+        const isSelected = item === button;
+        item.classList.toggle("is-active", isSelected);
+        item.setAttribute("aria-pressed", String(isSelected));
+      });
+      newsCards.forEach((card) => {
+        card.hidden = selectedCategory !== "all" && card.dataset.category !== selectedCategory;
+      });
+    });
+  });
+</script>
 
 <style>
   .section-heading {
@@ -106,9 +145,59 @@ const aiSummary =
     gap: 22px;
   }
 
+  .news-filters {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .news-filter {
+    min-height: 40px;
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    padding: 0 18px;
+    color: var(--color-navy);
+    background: #fff;
+    font: inherit;
+    font-weight: 750;
+    cursor: pointer;
+  }
+
+  .news-filter.is-active {
+    border-color: var(--color-accent);
+    color: #fff;
+    background: var(--color-accent);
+  }
+
   .news-card {
+    display: block;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .news-card[hidden] {
+    display: none;
+  }
+
+  .news-cover {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-mist);
+  }
+
+  .news-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .news-card-body {
     display: grid;
     gap: 12px;
+    padding: 22px;
   }
 
   .news-card h3 {

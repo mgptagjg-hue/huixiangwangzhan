@@ -1,5 +1,4 @@
 ---
-import AiSummary from "@components/AiSummary.astro";
 import ContactBand from "@components/ContactBand.astro";
 import FaqBlock from "@components/FaqBlock.astro";
 import FactPanel from "@components/FactPanel.astro";
@@ -33,6 +32,8 @@ const breadcrumbs = [
   ogImage={article.cover}
   ogImageAlt={article.coverAlt}
   updatedAt={article.updatedAt}
+  publishedAt={article.date}
+  author={article.author}
   schemas={[newsArticleSchema(article), faqSchema(article.faqs)]}
 >
   <PageHero title={article.title} description={article.description} breadcrumbs={breadcrumbs} />
@@ -49,7 +50,6 @@ const breadcrumbs = [
       <div class="article-meta-panel">
         <div class="meta-line">
           <span>分类：{article.category}</span>
-          {article.internalCategory && <span>后台备注分类：{article.internalCategory}</span>}
           <span>作者：{article.author}</span>
           <span>发布：<time datetime={article.date}>{article.date}</time></span>
           <span>更新：<time datetime={article.updatedAt}>{article.updatedAt}</time></span>
@@ -86,7 +86,6 @@ const breadcrumbs = [
   </article>
 
   <FaqBlock faqs={article.faqs} title="本文常见问题" />
-  <AiSummary summary={article.aiSummary} />
   <ContactBand />
 </BaseLayout>
 
