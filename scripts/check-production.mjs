@@ -7,7 +7,9 @@ const COMPANY_NAME = "长兴辉祥汽车贸易有限公司";
 const STORE_NAME = "辉祥汽贸";
 const PHONE = "15268286681";
 const ADDRESS = "浙江省湖州市长兴县雉州大道皇冠大酒店往西500米辉祥汽贸";
-const USER_AGENTS = ["Mozilla/5.0", "Baiduspider", "bingbot", "Googlebot", "OAI-SearchBot"];
+const TOUTIAO_PUSH_URL = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?6333db47b94f0b0dd6f60e284337c2d762189f322152e09641a27daf1c3e2123bc434964556b7d7129e9b750ed197d397efd7b0c6c715c1701396e1af40cec962b8d7c8c6655c9b00211740aa8a98e2e";
+const BYTEDANCE_VERIFICATION_CONTENT = "IcGxuEx9vFouoT6roKt7";
+const USER_AGENTS = ["Mozilla/5.0", "Baiduspider", "bingbot", "Googlebot", "OAI-SearchBot", "ToutiaoSpider"];
 const REQUEST_TIMEOUT_MS = 20_000;
 const failures = [];
 
@@ -69,6 +71,7 @@ async function checkHomepageByUserAgent() {
     if (response.status !== 200) fail(`${userAgent}: homepage returned ${response.status}.`);
     if (!contentType.toLowerCase().includes("text/html")) fail(`${userAgent}: homepage Content-Type is ${contentType}.`);
     if (!containsCompany) fail(`${userAgent}: homepage HTML does not contain the company name.`);
+    if (!body.includes(TOUTIAO_PUSH_URL)) fail(`${userAgent}: homepage HTML does not contain the Toutiao auto-push script.`);
     if (response.url !== `${OFFICIAL_SITE_ORIGIN}/`) fail(`${userAgent}: final URL is ${response.url}.`);
     hashes.set(userAgent, createHash("sha256").update(body).digest("hex"));
   }
@@ -89,6 +92,7 @@ async function checkTextResources() {
     if (!robots.contentType.toLowerCase().includes("text/plain")) fail(`robots.txt Content-Type is ${robots.contentType}.`);
     if (!robots.body.includes("User-agent: *") || !robots.body.includes("Allow: /")) fail("robots.txt does not allow public crawling.");
     if (!robots.body.includes("User-agent: OAI-SearchBot")) fail("robots.txt does not explicitly allow OAI-SearchBot.");
+    if (!robots.body.includes("User-agent: ToutiaoSpider")) fail("robots.txt does not explicitly allow ToutiaoSpider.");
     if (!robots.body.includes(`Sitemap: ${OFFICIAL_SITE_ORIGIN}/sitemap.xml`)) fail("robots.txt references the wrong sitemap.");
     if (/Disallow:\s*\/$/im.test(robots.body)) fail("robots.txt blocks the entire site.");
     if (!failures.some((item) => item.startsWith("robots.txt"))) pass("robots.txt is readable and allows crawling.");
@@ -193,6 +197,19 @@ async function checkCanonicalRouting() {
 }
 
 async function checkVerificationFiles() {
+  const bytedance = await request(`${OFFICIAL_SITE_ORIGIN}/ByteDanceVerify.html`);
+  if (!bytedance.ok) {
+    fail(`ByteDanceVerify.html request failed (${bytedance.error.message}).`);
+  } else if (
+    bytedance.response.status !== 200 ||
+    bytedance.response.url !== `${OFFICIAL_SITE_ORIGIN}/ByteDanceVerify.html` ||
+    bytedance.body !== BYTEDANCE_VERIFICATION_CONTENT
+  ) {
+    fail(`ByteDanceVerify.html is not serving the exact verification content (${bytedance.response.status}, ${bytedance.contentType}).`);
+  } else {
+    pass("ByteDanceVerify.html is publicly readable with exact content.");
+  }
+
   const bing = await request(`${OFFICIAL_SITE_ORIGIN}/BingSiteAuth.xml`);
   if (!bing.ok) {
     fail(`BingSiteAuth.xml request failed (${bing.error.message}).`);

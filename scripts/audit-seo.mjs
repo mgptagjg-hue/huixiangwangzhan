@@ -39,6 +39,8 @@ const requiredPages = [
 ];
 const forbiddenOriginPattern = /huixiang-auto\.example|https?:\/\/(?:localhost|127\.0\.0\.1)(?=[:/]|$)/i;
 const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+const toutiaoPushUrl = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?6333db47b94f0b0dd6f60e284337c2d762189f322152e09641a27daf1c3e2123bc434964556b7d7129e9b750ed197d397efd7b0c6c715c1701396e1af40cec962b8d7c8c6655c9b00211740aa8a98e2e";
+const toutiaoScriptId = 'el.id = "ttzz"';
 const staticVerificationFiles = new Map([
   ["ByteDanceVerify.html", "IcGxuEx9vFouoT6roKt7"]
 ]);
@@ -130,9 +132,13 @@ if (!fs.existsSync(root)) {
     const canonicals = canonicalMatches(html);
     const hasNoIndex = /<meta\s+[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
     const is404 = rel === "404.html";
+    const toutiaoPushCount = html.split(toutiaoPushUrl).length - 1;
+    const toutiaoScriptIdCount = html.split(toutiaoScriptId).length - 1;
 
     if (!title) failures.push(`${rel}: missing title`);
     if (!description) failures.push(`${rel}: missing meta description`);
+    if (toutiaoPushCount !== 1) failures.push(`${rel}: expected 1 Toutiao push URL, found ${toutiaoPushCount}`);
+    if (toutiaoScriptIdCount !== 1) failures.push(`${rel}: expected 1 Toutiao ttzz assignment, found ${toutiaoScriptIdCount}`);
     if (h1Count !== 1) failures.push(`${rel}: expected 1 h1, found ${h1Count}`);
     if (text.length < 200) failures.push(`${rel}: static HTML body is unexpectedly short`);
     if (!text.includes(companyName)) failures.push(`${rel}: static HTML does not contain the company name`);
@@ -225,6 +231,7 @@ if (!fs.existsSync(root)) {
     if (!robots.includes("User-agent: *")) failures.push("robots.txt: missing User-agent: *");
     if (!robots.includes("Allow: /")) failures.push("robots.txt: missing Allow: /");
     if (!robots.includes("User-agent: OAI-SearchBot")) failures.push("robots.txt: missing OAI-SearchBot rule");
+    if (!robots.includes("User-agent: ToutiaoSpider")) failures.push("robots.txt: missing ToutiaoSpider rule");
     if (/Disallow:\s*\/$/im.test(robots)) failures.push("robots.txt: blocks the whole site");
     if (!robots.includes(`Sitemap: ${OFFICIAL_SITE_ORIGIN}/sitemap.xml`)) failures.push("robots.txt: references the wrong sitemap");
   }

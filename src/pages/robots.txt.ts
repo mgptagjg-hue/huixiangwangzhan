@@ -6,6 +6,9 @@ export const GET: APIRoute = () => {
     `User-agent: *
 Allow: /
 
+User-agent: ToutiaoSpider
+Allow: /
+
 User-agent: OAI-SearchBot
 Allow: /
 
