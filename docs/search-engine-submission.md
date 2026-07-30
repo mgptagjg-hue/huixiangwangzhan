@@ -70,6 +70,14 @@ npm run check:production
 npm run indexnow -- --file scripts/indexnow-urls.json
 ```
 
+推荐使用一键命令。它会依次构建网站、检查本地 IndexNow 配置、检查线上正式站点，再提交 `scripts/indexnow-urls.json`：
+
+```bash
+npm run indexnow:all
+```
+
+任何检查失败都会中止提交。
+
 以后只提交真实新增、修改或删除的 URL：
 
 ```bash

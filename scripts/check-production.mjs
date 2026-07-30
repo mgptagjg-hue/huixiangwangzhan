@@ -31,13 +31,13 @@ function pass(message) {
   console.log(`PASS ${message}`);
 }
 
-async function request(url, userAgent = "Mozilla/5.0") {
+async function request(url, userAgent = "Mozilla/5.0", redirect = "follow") {
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     const startedAt = Date.now();
     try {
       const response = await fetch(url, {
         headers: { "User-Agent": userAgent, Accept: "text/html,application/xml,text/plain;q=0.9,*/*;q=0.8" },
-        redirect: "follow",
+        redirect,
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
       });
       const body = await response.text();
@@ -205,13 +205,15 @@ async function checkSitemapPages(urls) {
 }
 
 async function checkCanonicalRouting() {
-  const httpResponse = await fetch(`http://${new URL(OFFICIAL_SITE_ORIGIN).hostname}/`, {
-    redirect: "manual",
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
-  }).catch((error) => ({ error }));
-  if (httpResponse.error) {
-    fail(`HTTP redirect check failed (${httpResponse.error.message}).`);
+  const httpResult = await request(
+    `http://${new URL(OFFICIAL_SITE_ORIGIN).hostname}/`,
+    "Mozilla/5.0",
+    "manual"
+  );
+  if (!httpResult.ok) {
+    fail(`HTTP redirect check failed (${httpResult.error.message}).`);
   } else {
+    const httpResponse = httpResult.response;
     const location = httpResponse.headers.get("location") || "";
     if (![301, 308].includes(httpResponse.status)) fail(`HTTP origin returned ${httpResponse.status}, expected 301 or 308.`);
     if (new URL(location, OFFICIAL_SITE_ORIGIN).toString() !== `${OFFICIAL_SITE_ORIGIN}/`) fail(`HTTP origin redirects to ${location || "nowhere"}.`);

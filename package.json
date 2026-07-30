@@ -11,6 +11,7 @@
     "audit:seo": "node scripts/audit-seo.mjs",
     "images:store": "node scripts/optimize-store-images.mjs",
     "indexnow": "node scripts/submit-indexnow.mjs",
+    "indexnow:all": "npm run build && npm run check:indexnow && npm run check:production && npm run indexnow -- --file scripts/indexnow-urls.json",
     "check:indexnow": "node scripts/check-indexnow.mjs",
     "check:production": "node scripts/check-production.mjs"
   },

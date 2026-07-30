@@ -117,6 +117,14 @@ npm run check:production
 npm run indexnow -- --file scripts/indexnow-urls.json
 ```
 
+也可以使用一键命令依次完成构建、本地 IndexNow 校验、线上生产检查和正式 URL 清单提交：
+
+```bash
+npm run indexnow:all
+```
+
+任一步骤失败时命令会立即停止，不会继续发送 IndexNow 请求。
+
 ### 发布新文章后
 
 例如发布 `https://huixiangqimao.cn/news/example/` 后运行：
